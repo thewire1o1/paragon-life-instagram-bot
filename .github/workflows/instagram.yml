@@ -12,6 +12,10 @@ on:
         description: "Force a post immediately"
         type: boolean
         default: false
+  push:
+    branches: [main]
+    paths:
+      - state/setup-check.txt
   schedule:
     - cron: "17 9 * * *"
       timezone: "America/Los_Angeles"
@@ -71,7 +75,7 @@ jobs:
           git push
 
       - name: Setup check
-        if: ${{ steps.configured.outputs.ready == 'true' && github.event_name == 'workflow_dispatch' && inputs.job == 'check' }}
+        if: ${{ steps.configured.outputs.ready == 'true' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.job == 'check')) }}
         run: python -m bot.check_setup
 
       - name: Daily post
