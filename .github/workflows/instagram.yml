@@ -1,0 +1,96 @@
+name: Paragon Life Instagram
+
+on:
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "Job to run"
+        type: choice
+        options: [check, post, comments, refresh]
+        default: check
+      force_post:
+        description: "Force a post immediately"
+        type: boolean
+        default: false
+  schedule:
+    - cron: "17 9 * * *"
+      timezone: "America/Los_Angeles"
+    - cron: "41 8,11,14,17,20,23 * * *"
+      timezone: "America/Los_Angeles"
+    - cron: "23 10 * * 3"
+      timezone: "America/Los_Angeles"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paragon-life-instagram
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+      IG_USERNAME: paragon.life
+      IG_API_HOST: https://graph.instagram.com
+      IG_API_VERSION: v26.0
+      TZ_NAME: America/Los_Angeles
+      FORCE_POST: ${{ inputs.force_post && '1' || '0' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+
+      - name: Skip until credentials are configured
+        id: configured
+        shell: bash
+        run: |
+          if [[ -z "$OPENAI_API_KEY" || -z "$IG_ACCESS_TOKEN" ]]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "Credentials are not configured yet; exiting without error."
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: One-time token bootstrap
+        if: ${{ steps.configured.outputs.ready == 'true' && hashFiles('state/ig_token.enc') == '' }}
+        run: |
+          python -m bot.bootstrap_token
+          git config user.name paragon-life-bot
+          git config user.email actions@users.noreply.github.com
+          git add state/ig_token.enc
+          git commit -m "auth: bootstrap encrypted Instagram token"
+          git push
+
+      - name: Setup check
+        if: ${{ steps.configured.outputs.ready == 'true' && github.event_name == 'workflow_dispatch' && inputs.job == 'check' }}
+        run: python -m bot.check_setup
+
+      - name: Daily post
+        if: ${{ steps.configured.outputs.ready == 'true' && github.event_name == 'schedule' && github.event.schedule == '17 9 * * *' }}
+        run: python -m bot.daily_post
+
+      - name: Comment replies
+        if: ${{ steps.configured.outputs.ready == 'true' && github.event_name == 'schedule' && github.event.schedule == '41 8,11,14,17,20,23 * * *' }}
+        run: python -m bot.reply_comments
+
+      - name: Weekly token refresh
+        if: ${{ steps.configured.outputs.ready == 'true' && github.event_name == 'schedule' && github.event.schedule == '23 10 * * 3' }}
+        run: python -m bot.refresh_token
+
+      - name: Manual job
+        if: ${{ steps.configured.outputs.ready == 'true' && github.event_name == 'workflow_dispatch' && inputs.job != 'check' }}
+        run: |
+          case "${{ inputs.job }}" in
+            post) python -m bot.daily_post ;;
+            comments) python -m bot.reply_comments ;;
+            refresh) python -m bot.refresh_token ;;
+          esac
