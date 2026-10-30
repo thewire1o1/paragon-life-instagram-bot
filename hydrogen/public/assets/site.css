@@ -65,3 +65,20 @@ body.cart-active{overflow:hidden}
 
 /* Use the actual Coffee storefront monogram, not a rebuilt favicon symbol. */
 .coffee-brand-mark{display:inline-block;width:22px;height:22px;min-width:22px;object-fit:contain;vertical-align:middle;border:0;background:transparent}
+
+/* Keep Cloudflare release equally compact and video-first on mobile. */
+@media(max-width:620px){
+ .hero{min-height:515px;height:515px}
+ .hero-copy{padding:20px}
+ .section{padding:45px 22px}
+ .section-head h2{margin-bottom:20px}
+ .youtube-feature{padding:43px 22px;gap:20px}
+ .youtube-feature h2{font-size:48px;margin:17px 0}
+ .youtube-feature__intro p{line-height:1.55;margin-bottom:19px}
+ .split{gap:22px}
+ .features{gap:10px}
+ .features article{min-height:0;padding:22px}
+ .story-strip{padding:49px 22px}
+ .footer{padding:43px 22px 23px;gap:20px}
+ .page{min-height:0;padding:45px 22px}
+}

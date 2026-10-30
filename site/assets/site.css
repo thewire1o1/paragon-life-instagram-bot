@@ -196,3 +196,38 @@ body.menu-open{overflow:hidden}
 
 /* Use the actual Coffee storefront monogram, not a rebuilt favicon symbol. */
 .coffee-brand-mark{display:inline-block;width:22px;height:22px;min-width:22px;object-fit:contain;vertical-align:middle;border:0;background:transparent}
+
+/* Compact editorial layout: respect mobile screen space without hiding content. */
+@media(max-width:560px){
+ .section{padding:43px var(--pad)}
+ .section-heading{margin-bottom:23px}
+ .section-heading h2,.section h2{font-size:clamp(43px,12vw,53px);line-height:.92}
+ .section-heading p{margin-top:15px;line-height:1.55}
+ .hero-car{min-height:550px;height:550px}
+ .hero-content{bottom:29px}
+ .hero-content p{line-height:1.45}
+ .actions{margin-top:17px}
+ .youtube-feature{padding:44px var(--pad);gap:19px}
+ .youtube-feature h2{font-size:clamp(46px,12vw,60px);margin:15px 0}
+ .youtube-feature__intro p{line-height:1.55;margin-bottom:19px}
+ .youtube-feature__poster-label strong{font-size:23px}
+ .pillars,.note-grid{gap:10px}
+ .pillar,.pillar:last-child{min-height:195px;padding:24px}
+ .pillar h3{font-size:clamp(40px,11vw,51px)}
+ .featured{min-height:370px}
+ .project-list article{min-height:0;padding:18px 24px}
+ .project-list h3{font-size:31px}
+ .technical{min-height:250px;padding:24px}
+ .tech-copy{padding:30px 24px}
+ .tech-copy h2{font-size:clamp(44px,12vw,57px)}
+ .tech-copy li{padding:10px 0}
+ .note{min-height:160px;padding:20px}
+ .note h3{font-size:clamp(30px,9vw,42px);margin:14px 0 8px}
+ .about{gap:20px}
+ .footer{padding:42px var(--pad) 20px}
+ .footer-main{padding-bottom:36px;gap:24px}
+ .footer-title{font-size:clamp(61px,15vw,79px)}
+ .footer-title small{margin-top:16px}
+ .footer-nav a,.footer-nav span{margin-top:12px}
+ .footer-children{margin-top:13px}
+}
