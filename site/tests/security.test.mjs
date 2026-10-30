@@ -53,3 +53,11 @@ test('YouTube appears immediately after approved hero, with no fake playable vid
  assert.ok(html.indexOf('id="youtube"')<html.indexOf('id="projects"'));
  assert.match(html,/A Southern California Lifestyle Brand/);
 });
+
+test('homepage does not contain the redundant merchandise or Coffee promo section',()=>{
+ assert.doesNotMatch(html,/id="shop"/);
+ assert.doesNotMatch(html,/PARAGON<br>GOODS\./);
+ assert.doesNotMatch(html,/COLLECTION COMING SOON/i);
+ assert.doesNotMatch(html,/href="#shop"/);
+ assert.match(html,/href="https:\/\/coffee\.digitalparagon\.com\//);
+});

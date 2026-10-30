@@ -92,6 +92,7 @@ async function addItem(variantId,quantity,btn){
  finally{btn.disabled=false}
 }
 function renderCatalog(products){
+ if(!shopGrid||!liveProducts)return;
  for(const p of products){
   if(!p.available)continue;
   const variants=p.variants.filter(v=>v.available);
@@ -122,6 +123,6 @@ checkoutButton.addEventListener('click',async()=>{
 (async()=>{
  try{
   const {products}=await requestShop('catalog');
-  if(Array.isArray(products)){renderCatalog(products);if(!liveProducts.hidden){cart=await requestShop('cart');updateCart()}}
+  if(Array.isArray(products)&&shopGrid&&liveProducts){renderCatalog(products);if(!liveProducts.hidden){cart=await requestShop('cart');updateCart()}}
  }catch{/* Keep commerce hidden until the independent Life store is configured. */}
 })();

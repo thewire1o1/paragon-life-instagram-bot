@@ -22,3 +22,10 @@ test('Hydrogen keeps shared bag and top-level YouTube and South California ident
  assert.match(landing,/id="youtube"/);
  assert.match(landing,/VIDEOS COMING SOON/);
 });
+
+test('Hydrogen homepage is creator-led, without merchandise placeholder section',()=>{
+ assert.doesNotMatch(landing,/id="featured"/);
+ assert.doesNotMatch(landing,/Shop the collection/);
+ assert.doesNotMatch(landing,/Collection coming soon/);
+ assert.match(landing,/Explore the videos/);
+});
