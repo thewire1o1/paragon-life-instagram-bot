@@ -1,7 +1,37 @@
 
 const m=document.getElementById('menu'),nav=document.getElementById('mobile-nav');
-m.addEventListener('click',()=>{const open=nav.classList.toggle('open');m.setAttribute('aria-expanded',String(open))});
-nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');m.setAttribute('aria-expanded','false')}));
+let menuPreviousFocus=null;
+function setMenu(open,{restoreFocus=true}={}){
+  const wasOpen=!nav.hidden;
+  if(open&&!wasOpen)menuPreviousFocus=document.activeElement;
+  nav.hidden=!open;
+  nav.classList.toggle('open',open);
+  m.setAttribute('aria-expanded',String(open));
+  m.setAttribute('aria-label',open?'Close menu':'Open menu');
+  m.classList.toggle('is-open',open);
+  document.body.classList.toggle('menu-open',open);
+  if(open){
+    nav.style.top=Math.max(0,document.querySelector('.header').getBoundingClientRect().bottom)+'px';
+    if(!wasOpen)nav.querySelector('a,summary')?.focus();
+  }else{
+    nav.querySelectorAll('details').forEach(d=>d.open=false);
+    if(wasOpen&&restoreFocus&&menuPreviousFocus?.isConnected)menuPreviousFocus.focus();
+  }
+}
+m.addEventListener('click',()=>setMenu(nav.hidden));
+nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(false,{restoreFocus:false})));
+document.addEventListener('keydown',event=>{
+  if(nav.hidden)return;
+  if(event.key==='Escape'){event.preventDefault();setMenu(false);return}
+  if(event.key==='Tab'){
+    const focusable=[m,...nav.querySelectorAll('a[href],summary')].filter(el=>el.getClientRects().length>0);
+    const first=focusable[0],last=focusable[focusable.length-1];
+    if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}
+    else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
+  }
+});
+window.addEventListener('resize',()=>{if(!nav.hidden){if(window.innerWidth>1100)setMenu(false,{restoreFocus:false});else nav.style.top=Math.max(0,document.querySelector('.header').getBoundingClientRect().bottom)+'px'}});
+window.addEventListener('hashchange',()=>{if(!nav.hidden)setMenu(false,{restoreFocus:false})});
 (async()=>{const images=[...document.querySelectorAll('[data-image]')];for(const path of new Set(images.map(x=>x.dataset.image))){try{let r=await fetch('/'+path);if(!r.ok)r=await fetch('https://raw.githubusercontent.com/thewire1o1/paragon-life-instagram-bot/site-paragon-life-v2/'+path);if(!r.ok)continue;let b64=(await r.text()).trim();if(/[^A-Za-z0-9+/=\s]/.test(b64)){const fallback=await fetch('https://raw.githubusercontent.com/thewire1o1/paragon-life-instagram-bot/site-paragon-life-v2/'+path);if(!fallback.ok)continue;b64=(await fallback.text()).trim()}if(/[^A-Za-z0-9+/=\s]/.test(b64))continue;const src='data:image/webp;base64,'+b64;images.filter(x=>x.dataset.image===path).forEach(x=>x.src=src)}catch{}}})();
 
 const shopGrid=document.getElementById('catalog-grid');
