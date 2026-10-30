@@ -146,3 +146,8 @@ body.menu-open{overflow:hidden}
 @media(max-width:1100px){nav.main{display:none}.menu-btn{display:inline-flex}.head-inner{height:70px}.mobile-nav.open{display:block}}
 @media(max-width:560px){.head-inner{height:68px}.menu-btn{width:38px;height:38px;min-width:38px}.mobile-nav__children{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(prefers-reduced-motion:reduce){.menu-bars,.menu-bars::before,.menu-bars::after{transition:none}}
+
+/* Outbound-brand link indicator, with the same arrow-out interaction used on Coffee. */
+.external-link{display:inline-flex;align-items:center;gap:6px}
+.external-icon{display:inline-block;flex:none;vertical-align:middle;width:15px;height:15px}
+.shop-card.coffee .external-icon{width:16px;height:16px}

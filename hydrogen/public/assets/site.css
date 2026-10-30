@@ -18,3 +18,6 @@ body.menu-open{overflow:hidden}
 @media(max-width:1100px){.nav{display:none}.menu-btn{display:inline-flex}}
 @media(max-width:680px){.mobile-nav{top:70px}.hero{margin-top:0}}
 @media(prefers-reduced-motion:reduce){.menu-bars,.menu-bars:before,.menu-bars:after{transition:none}}
+
+.external-link{display:inline-flex;align-items:center;gap:6px}
+.external-icon{display:inline-block;flex:none;vertical-align:middle}
