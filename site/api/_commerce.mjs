@@ -47,8 +47,8 @@ export async function graphql(config,query,variables={}) {
   if(data.errors?.length||!data.data)throw problem(502,'Store request failed.');
   return data.data;
 }
-export const CATALOG = \`query LifeCatalog { products(first:40){nodes{id handle title availableForSale featuredImage{url altText} variants(first:40){nodes{id title availableForSale price{amount currencyCode}}}}}}\`;
-export const CART_FIELDS = \`id checkoutUrl totalQuantity cost{subtotalAmount{amount currencyCode}} lines(first:100){nodes{id quantity merchandise{... on ProductVariant{id title product{handle title} price{amount currencyCode}}}}}\`;
+export const CATALOG = `query LifeCatalog { products(first:40){nodes{id handle title availableForSale featuredImage{url altText} variants(first:40){nodes{id title availableForSale price{amount currencyCode}}}}}}`;
+export const CART_FIELDS = `id checkoutUrl totalQuantity cost{subtotalAmount{amount currencyCode}} lines(first:100){nodes{id quantity merchandise{... on ProductVariant{id title product{handle title} price{amount currencyCode}}}}}`;
 export async function catalog(config) {
  const data=await graphql(config,CATALOG);
  return data.products.nodes.map(p=>({
@@ -58,7 +58,7 @@ export async function catalog(config) {
  }));
 }
 export async function readCart(config,id) {
- if(!id)return null;const data=await graphql(config,\`query ReadCart($id:ID!){cart(id:$id){\${CART_FIELDS}}}\`,{id});
+ if(!id)return null;const data=await graphql(config,`query ReadCart($id:ID!){cart(id:$id){${CART_FIELDS}}}`,{id});
  return data.cart;
 }
 export function publicCart(cart) {
