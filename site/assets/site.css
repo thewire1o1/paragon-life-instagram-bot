@@ -1,12 +1,12 @@
 
-:root{--dark:#111713;--paper:#f1f0eb;--line:#c4c9c2;--blue:#168ce2;--soft:#e4e8e2;--ink:#181e19;--pad:clamp(20px,5vw,78px)}
+:root{--dark:#111713;--paper:#dad5cd;--line:#b1aca3;--blue:#168ce2;--soft:#d1ccc4;--ink:#181e19;--pad:clamp(20px,5vw,78px)}
 *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:85px}
 body{margin:0;background:var(--paper);font-family:"DM Sans",Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}img{display:block;max-width:100%}
 .skip{position:absolute;top:-60px;left:10px;padding:12px;background:white;z-index:99}.skip:focus{top:12px}
 .eyebrow{font-size:10px;font-weight:700;letter-spacing:.19em;text-transform:uppercase}
 .top{background:var(--dark);color:#adc2b1;display:flex;justify-content:space-between;gap:12px;padding:9px var(--pad);font-size:9px;text-transform:uppercase;letter-spacing:.14em;font-weight:700}
-.top a{color:white}.header{position:sticky;z-index:15;top:0;background:#f1f0ebf5;backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.top a{color:white}.header{position:sticky;z-index:15;top:0;background:rgba(218,213,205,.96);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
 .head-inner{height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 var(--pad)}
 .logo{font:800 30px/.8 "Barlow Condensed",sans-serif;letter-spacing:.01em;white-space:nowrap}
 .logo span{color:var(--blue)}.logo small{display:block;margin-top:10px;font:700 8px "DM Sans",sans-serif;letter-spacing:.23em}
