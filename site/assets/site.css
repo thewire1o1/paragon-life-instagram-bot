@@ -105,3 +105,14 @@ h1 span{color:#8dccf6;display:block}p{line-height:1.7}
 @media(max-width:900px){.catalog-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.catalog-grid{grid-template-columns:1fr}.cart-open{padding:8px}.cart-drawer{padding:21px}}
 
 .logo{display:flex;gap:11px;align-items:center}.logo-emblem{flex-shrink:0;width:53px;height:53px;object-fit:contain}.logo-words{display:block}.logo-words span{color:var(--blue)}@media(max-width:560px){.logo-emblem{width:45px;height:45px}.logo{font-size:22px}}
+
+/* Approved Paragon Life desert atelier photography, full-width editorial hero. */
+.hero{display:block;background:#101714;color:white}
+.hero-car{width:100%;height:min(68vw,760px);min-height:620px;background:#121715}
+.hero-car img{object-fit:cover;object-position:center 54%}
+.hero-car:after{background:linear-gradient(0deg,rgba(8,13,13,.80),transparent 69%),linear-gradient(90deg,rgba(8,13,13,.64),transparent 68%)}
+.hero-content{max-width:730px;bottom:clamp(36px,6vw,75px)}
+.hero h1{font-size:clamp(68px,7.5vw,118px);line-height:.83}
+.hero-content p{max-width:500px}
+@media(max-width:800px){.hero-car{height:610px;min-height:610px}.hero-car img{object-position:61% 50%}}
+@media(max-width:560px){.hero-car{height:595px;min-height:595px}.hero-car img{object-position:62% center}.hero-car:after{background:linear-gradient(0deg,rgba(8,13,13,.90),rgba(8,13,13,.11) 80%)}.hero h1{font-size:clamp(61px,14vw,83px)}.hero-content{left:22px;right:22px;bottom:34px}}
