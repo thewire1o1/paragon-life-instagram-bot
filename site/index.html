@@ -6,104 +6,7 @@
 <meta name="description" content="Paragon Life. Independent automotive builds, technology, 3D fabrication, electronics, apparel and projects from California.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root{--dark:#111713;--paper:#f1f0eb;--line:#c4c9c2;--blue:#168ce2;--soft:#e4e8e2;--ink:#181e19;--pad:clamp(20px,5vw,78px)}
-*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:85px}
-body{margin:0;background:var(--paper);font-family:"DM Sans",Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}img{display:block;max-width:100%}
-.skip{position:absolute;top:-60px;left:10px;padding:12px;background:white;z-index:99}.skip:focus{top:12px}
-.eyebrow{font-size:10px;font-weight:700;letter-spacing:.19em;text-transform:uppercase}
-.top{background:var(--dark);color:#adc2b1;display:flex;justify-content:space-between;gap:12px;padding:9px var(--pad);font-size:9px;text-transform:uppercase;letter-spacing:.14em;font-weight:700}
-.top a{color:white}.header{position:sticky;z-index:15;top:0;background:#f1f0ebf5;backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
-.head-inner{height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 var(--pad)}
-.logo{font:800 30px/.8 "Barlow Condensed",sans-serif;letter-spacing:.01em;white-space:nowrap}
-.logo span{color:var(--blue)}.logo small{display:block;margin-top:10px;font:700 8px "DM Sans",sans-serif;letter-spacing:.23em}
-nav.main{display:flex;gap:clamp(12px,2.3vw,38px);align-items:center}
-nav.main a{font-size:10px;letter-spacing:.14em;font-weight:700;text-transform:uppercase;white-space:nowrap}
-nav.main a:hover,footer a:hover{color:var(--blue)}
-nav.main .shop-link{border:1px solid var(--ink);padding:12px 15px}
-.menu-btn{display:none;border:1px solid var(--ink);background:none;padding:11px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em}
-.mobile-nav{display:none}
-.hero{display:grid;grid-template-columns:1.65fr 1fr;min-height:680px;color:white;background:#0c1518}
-.hero-car{position:relative;min-height:680px;overflow:hidden;background:radial-gradient(circle at 60% 38%,#326b94,#09131d 75%)}
-.hero-car img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:54% center}
-.hero-car:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#08131bed 0%,#08131b60 53%,#08131b10),linear-gradient(90deg,#08131ba1,transparent 75%)}
-.hero-content{position:absolute;z-index:2;left:var(--pad);bottom:55px;max-width:800px;right:35px}
-.hero-content .eyebrow{color:#9bd6ff;display:flex;align-items:center;gap:12px}
-.hero-content .eyebrow:before{content:"";background:var(--blue);width:28px;height:3px}
-h1,h2,h3{font-family:"Barlow Condensed",Impact,sans-serif;text-transform:uppercase}
-h1{font-weight:700;font-size:clamp(68px,8.1vw,134px);letter-spacing:-.015em;line-height:.77;margin:26px 0}
-h1 span{color:#8dccf6;display:block}p{line-height:1.7}
-.hero-content p{font-size:15px;line-height:1.65;color:#e2ebec;max-width:530px}
-.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
-.btn{display:inline-flex;align-items:center;justify-content:space-between;gap:25px;padding:16px 20px;text-transform:uppercase;letter-spacing:.12em;font-size:10px;font-weight:700;min-height:48px}
-.btn.blue{background:var(--blue);color:white}.btn.blue:hover{background:#0b6fb7}.btn.clear{border:1px solid #cce5f4;color:white}.btn.clear:hover{background:white;color:var(--dark)}
-.hero-tech{display:flex;flex-direction:column;min-width:0}.tech-art{position:relative;background:#142720;flex:1;min-height:400px;overflow:hidden}
-.tech-art svg{position:absolute;inset:0;width:100%;height:100%}
-.tech-art:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#142720 0%,transparent 77%)}
-.tech-caption{position:absolute;z-index:2;left:30px;right:25px;bottom:32px}
-.tech-caption h2{font-size:clamp(46px,5vw,81px);font-weight:700;line-height:.85;margin:14px 0}
-.tech-caption p{font-size:12px;color:#cfddd4;max-width:330px}
-.hero-index{padding:26px 30px;background:#1a231f;display:grid;gap:17px}
-.hero-index div{display:flex;justify-content:space-between;gap:20px;border-bottom:1px solid #34463a;padding-bottom:10px;text-transform:uppercase;font-size:11px;letter-spacing:.11em}
-.hero-index span{color:#90b59c}
-.band{background:#25352c;color:#d8e2d6;padding:15px;text-align:center;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
-.band b{color:#7dc2ef;padding:0 34px}
-.section{padding:clamp(72px,8vw,120px) var(--pad)}
-.section-heading{display:flex;align-items:end;justify-content:space-between;gap:25px;margin-bottom:36px}
-.section-heading h2,.section h2{font-size:clamp(50px,6vw,91px);line-height:.87;margin:14px 0 0;font-weight:700}
-.section-heading p{font-size:13px;color:#657067;max-width:320px;margin:0}
-.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.pillar{min-height:385px;background:#1c2922;color:white;padding:32px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .2s}
-.pillar:nth-child(2){background:#1c303b}.pillar:nth-child(3){background:#3b433c}
-.pillar:hover{transform:translateY(-4px)}
-.pillar h3{font-size:clamp(46px,5vw,70px);line-height:.85;margin:0 0 17px}
-.pillar p{font-size:13px;max-width:270px;color:#d1dbd2}.pillar .foot{border-top:1px solid #7e96816e;padding-top:18px;text-transform:uppercase;font-size:11px;letter-spacing:.14em;font-weight:700}
-.dark{background:var(--dark);color:white}.dark .eyebrow{color:#97bdab}
-.projects{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin-top:39px}
-.featured{position:relative;min-height:520px;background:linear-gradient(135deg,#2c6283,#111a1d);overflow:hidden}
-.featured img{position:absolute;width:100%;height:100%;object-fit:cover}
-.featured:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#09161bf0,transparent 75%)}
-.featured-copy{position:absolute;z-index:2;left:32px;right:32px;bottom:23px}
-.featured h3{font-size:clamp(55px,6vw,86px);line-height:.85;margin:13px 0}
-.featured p{font-size:13px;color:#d7e5e6;max-width:480px}
-.project-list{background:#202a24}.project-list article{border-bottom:1px solid #445449;padding:28px 30px;min-height:33.33%}
-.project-list h3{font-size:36px;line-height:.9;margin:10px 0}.project-list p{font-size:12px;color:#becfc3;max-width:370px}
-.tech-strip{display:grid;grid-template-columns:1fr 1fr;background:#dfe6df}
-.technical{min-height:470px;background:#152822;display:grid;place-items:center;padding:35px}
-.technical svg{width:min(100%,490px);height:auto}
-.tech-copy{padding:clamp(40px,6vw,95px);align-self:center}
-.tech-copy h2{margin:18px 0;font-size:clamp(57px,6vw,90px)}
-.tech-copy p{font-size:14px;color:#506057;max-width:480px}
-.tech-copy ul{padding:0;list-style:none;margin:25px 0 0}
-.tech-copy li{padding:14px 0;border-top:1px solid #a9bdb0;font-size:12px}
-.tech-copy li b{color:#31809a;margin-right:15px}
-.shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
-.shop-card{min-height:350px;padding:45px;display:flex;flex-direction:column;justify-content:space-between}
-.shop-card.merch{background:#dfe8e5}.shop-card.coffee{background:#2f2922;color:#fff8ed}
-.shop-card h3{font-size:clamp(65px,8vw,117px);line-height:.78;margin:30px 0}
-.shop-card p{font-size:13px;max-width:330px}
-.shop-card a{width:max-content;border-top:1px solid;padding-top:15px;text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:700}
-.note-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.note{padding:29px;min-height:260px;background:#e0e5e0;display:flex;flex-direction:column;justify-content:space-between}
-.note:nth-child(2){background:#e9e6df}.note:nth-child(3){background:#d9e4e8}
-.note h3{font-size:clamp(31px,3.2vw,47px);line-height:.95;margin:22px 0 12px}.note p{font-size:12px;color:#58665c}
-.about{background:var(--blue);color:white;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
-.about p{font-size:15px;max-width:500px;color:#e9f6ff}
-.about a{font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:11px;border-bottom:1px solid white;padding-bottom:9px}
-.footer{background:#0b120d;color:#e2e9df;padding:65px var(--pad) 25px}
-.footer-main{display:grid;grid-template-columns:1fr 1fr;gap:35px;padding-bottom:63px}
-.footer-title{font:700 clamp(65px,7vw,115px)/.8 "Barlow Condensed",sans-serif;text-transform:uppercase}
-.footer-title small{font:500 12px "DM Sans",sans-serif;display:block;color:#92af9b;margin-top:28px;letter-spacing:.11em}
-.footer-nav{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.footer-nav strong{font-size:10px;color:#8cb19a;letter-spacing:.13em;text-transform:uppercase}
-.footer-nav a,.footer-nav span{display:block;font-size:12px;margin-top:17px;color:#d1dcd0}
-.footer-bottom{padding-top:24px;border-top:1px solid #354139;color:#8ba08e;display:flex;justify-content:space-between;gap:15px;font-size:10px;text-transform:uppercase;letter-spacing:.13em}
-@media(max-width:1000px){nav.main{gap:13px}nav.main a{font-size:9px}.hero{grid-template-columns:1.3fr .7fr}.hero h1{font-size:clamp(65px,8vw,96px)}}
-@media(max-width:800px){nav.main{display:none}.menu-btn{display:block}.mobile-nav.open{display:flex;flex-direction:column;padding:12px var(--pad) 20px;background:var(--paper);border-top:1px solid var(--line)}.mobile-nav a{font-size:13px;text-transform:uppercase;letter-spacing:.13em;font-weight:700;padding:13px 0;border-bottom:1px solid var(--line)}.hero{grid-template-columns:1fr}.hero-car{min-height:640px}.hero-tech{display:grid;grid-template-columns:1fr 1fr}.tech-art{min-height:300px}.hero-index{align-content:center}.pillars{grid-template-columns:1fr 1fr}.pillar:last-child{grid-column:span 2;min-height:250px}.projects,.tech-strip{grid-template-columns:1fr}.project-list{display:grid;grid-template-columns:1fr 1fr}.project-list article:last-child{grid-column:span 2}.section-heading{display:block}.section-heading p{margin-top:25px}.footer-main{grid-template-columns:1fr}}
-@media(max-width:560px){.top span:nth-child(2){display:none}.head-inner{height:68px}.logo{font-size:25px}.hero-car{min-height:630px}.hero-content{bottom:40px}.hero h1{font-size:clamp(63px,15vw,88px)}.hero-content p{font-size:13px}.hero-tech{grid-template-columns:1fr}.tech-art{min-height:270px}.hero-index{display:none}.band b{padding:0 8px}.pillars,.shop-grid,.note-grid{grid-template-columns:1fr}.pillar:last-child{grid-column:auto}.pillar{min-height:295px}.section-heading h2,.section h2{font-size:57px}.featured{min-height:420px}.project-list{grid-template-columns:1fr}.project-list article:last-child{grid-column:auto}.technical{min-height:310px}.shop-card{min-height:315px;padding:32px}.about{grid-template-columns:1fr;gap:25px}.footer-nav{grid-template-columns:repeat(2,1fr)}.footer-bottom{flex-direction:column}}
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
-</style>
+<link rel="stylesheet" href="/assets/site.css">
 </head>
 <body>
 <a class="skip" href="#content">Skip to content</a>
@@ -111,12 +14,13 @@ h1 span{color:#8dccf6;display:block}p{line-height:1.7}
 <header class="header"><div class="head-inner">
 <a href="/" class="logo" aria-label="Paragon Life home">PARAGON <span>LIFE</span><small>AUTOMOTIVE + TECHNOLOGY</small></a>
 <nav class="main" aria-label="Main navigation"><a href="#automotive">Automotive</a><a href="#technology">Technology</a><a href="#projects">Projects</a><a href="#shop">Apparel</a><a href="#coffee">Coffee</a><a class="shop-link" href="#about">About</a></nav>
+<button type="button" id="cart-open" class="cart-open" hidden>Bag (<span id="cart-count">0</span>)</button>
 <button type="button" class="menu-btn" id="menu" aria-expanded="false" aria-controls="mobile-nav">Menu ☰</button></div>
 <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation"><a href="#automotive">Automotive</a><a href="#technology">Technology</a><a href="#projects">Projects</a><a href="#shop">Apparel</a><a href="#coffee">Coffee</a><a href="#about">About</a></nav>
 </header>
 <main id="content">
 <section class="hero"><div class="hero-car"><img alt="Paragon Life Porsche Cayman S build concept artwork" id="hero-image" data-image="assets/paragon-life-hero.webp.b64" fetchpriority="high"><div class="hero-content"><div class="eyebrow">Automotive / Technology / Projects</div><h1>BUILT AROUND <span>CURIOSITY.</span></h1><p>Machines. Electronics. Fabrication. From automotive builds to the tech and ideas that make the next project possible.</p><div class="actions"><a class="btn blue" href="#automotive">Explore automotive <span>↗</span></a><a class="btn clear" href="#technology">Explore technology <span>↗</span></a></div></div></div>
-<div class="hero-tech"><div class="tech-art"><svg viewBox="0 0 500 500" aria-hidden="true" preserveAspectRatio="xMidYMid slice"><defs><pattern id="grid" width="27" height="27" patternUnits="userSpaceOnUse"><path d="M27 0H0V27" stroke="#548574" stroke-opacity=".25"/></pattern></defs><rect width="500" height="500" fill="url(#grid)"/><g stroke="#65b0c6" fill="none" stroke-width="2"><path d="M30 110H155V170H310V250H460M490 75H350V155H215V350H50M460 410H300V310H100V460"/><rect x="180" y="164" width="140" height="140"/><rect x="196" y="180" width="108" height="108"/><path d="M210 164V139M240 164V139M270 164V139M300 164V139M210 304V329M240 304V329M270 304V329M300 304V329M180 190H155M180 222H155M180 254H155M320 190H345M320 222H345M320 254H345"/></g><g fill="#76c7db"><circle cx="30" cy="110" r="5"/><circle cx="460" cy="250" r="5"/><circle cx="50" cy="350" r="5"/><circle cx="460" cy="410" r="5"/><path d="M231 218h38v38h-38z"/></g></svg><div class="tech-caption"><div class="eyebrow" style="color:#8bb4a8">Equally obsessed with tech</div><h2>THE OTHER<br>HALF.</h2><p>Computers, electronics, 3D scanning, printing, reverse engineering, and the stuff in between.</p></div></div><div class="hero-index"><div><span>01</span>Automotive</div><div><span>02</span>Technology</div><div><span>03</span>Projects & beyond</div></div></div></section>
+<div class="hero-tech"><div class="tech-art"><svg viewBox="0 0 500 500" aria-hidden="true" preserveAspectRatio="xMidYMid slice"><defs><pattern id="grid" width="27" height="27" patternUnits="userSpaceOnUse"><path d="M27 0H0V27" stroke="#548574" stroke-opacity=".25"/></pattern></defs><rect width="500" height="500" fill="url(#grid)"/><g stroke="#65b0c6" fill="none" stroke-width="2"><path d="M30 110H155V170H310V250H460M490 75H350V155H215V350H50M460 410H300V310H100V460"/><rect x="180" y="164" width="140" height="140"/><rect x="196" y="180" width="108" height="108"/><path d="M210 164V139M240 164V139M270 164V139M300 164V139M210 304V329M240 304V329M270 304V329M300 304V329M180 190H155M180 222H155M180 254H155M320 190H345M320 222H345M320 254H345"/></g><g fill="#76c7db"><circle cx="30" cy="110" r="5"/><circle cx="460" cy="250" r="5"/><circle cx="50" cy="350" r="5"/><circle cx="460" cy="410" r="5"/><path d="M231 218h38v38h-38z"/></g></svg><div class="tech-caption"><div class="eyebrow" class="panel-label">Equally obsessed with tech</div><h2>THE OTHER<br>HALF.</h2><p>Computers, electronics, 3D scanning, printing, reverse engineering, and the stuff in between.</p></div></div><div class="hero-index"><div><span>01</span>Automotive</div><div><span>02</span>Technology</div><div><span>03</span>Projects & beyond</div></div></div></section>
 <div class="band">Automotive <b>◆</b> Technology <b>◆</b> Fabrication <b>◆</b> Lifestyle</div>
 <section class="section" id="projects"><div class="section-heading"><div><div class="eyebrow">The world of Paragon / 01</div><h2>MORE THAN ONE<br>OBSESSION.</h2></div><p>Follow the process. The builds, the hardware, the problem solving, and everything that gets made along the way.</p></div>
 <div class="pillars">
@@ -125,22 +29,18 @@ h1 span{color:#8dccf6;display:block}p{line-height:1.7}
 <a class="pillar" href="#journal"><div class="eyebrow">03 / More</div><div><h3>THE<br>IDEAS.</h3><p>Power systems, design, experiments, and whatever earns a spot on the workbench.</p></div><div class="foot">Explore projects ↗</div></a>
 </div></section>
 <div class="dark"><section class="section" id="automotive"><div class="eyebrow">Automotive / 02</div><h2>MADE TO FEEL<br>DIFFERENT.</h2>
-<div class="projects"><article class="featured"><img alt="Concept rendering of the Paragon Life Cayman S project" data-image="assets/paragon-life-hero.webp.b64" loading="lazy"><div class="featured-copy"><div class="eyebrow" style="color:#99ceed">Featured build / Porsche Cayman S / Concept</div><h3>CAYMAN S 4.5</h3><p>A 987.1 build in development. Hartech 4.5-liter engine, chassis work, cooling, braking, and a carefully considered exterior.</p></div></article><div class="project-list">
+<div class="projects"><article class="featured"><img alt="Concept rendering of the Paragon Life Cayman S project" data-image="assets/paragon-life-hero.webp.b64" loading="lazy"><div class="featured-copy"><div class="eyebrow" class="featured-label">Featured build / Porsche Cayman S / Concept</div><h3>CAYMAN S 4.5</h3><p>A 987.1 build in development. Hartech 4.5-liter engine, chassis work, cooling, braking, and a carefully considered exterior.</p></div></article><div class="project-list">
 <article><div class="eyebrow">Project / 02</div><h3>2021 MACAN S</h3><p>Exploring performance, thoughtful upgrades, and daily-driver technology.</p></article>
 <article><div class="eyebrow">Project / 03</div><h3>2013 NISSAN XTERRA</h3><p>An off-road project built around more capable suspension and a Titan-swap direction.</p></article>
 <article><div class="eyebrow">More to come</div><h3>OTHER MACHINES</h3><p>New ideas and interesting vehicles will appear here as the projects take shape.</p></article></div></div></section></div>
 <section class="tech-strip" id="technology"><div class="technical"><svg viewBox="0 0 500 460" fill="none" aria-label="CAD style technical illustration of a 3D printed object" role="img"><g stroke="#3e685c" opacity=".4"><path d="M0 100H500M0 200H500M0 300H500M0 400H500M100 0V460M200 0V460M300 0V460M400 0V460"/></g><g stroke="#8bdaec" stroke-width="2.4" stroke-linejoin="round"><path d="M110 150L250 70L390 150V312L250 390L110 312Z"/><path d="M110 150L250 228L390 150M250 228V390"/><path d="M177 190L250 148L323 190L250 232Z"/><path d="M177 190V275L250 317L323 275V190"/><path d="M250 232V317"/><path d="M250 70V20M390 150L440 115M110 312L60 345" stroke-dasharray="7 8"/></g><g fill="#8bdaec"><circle cx="250" cy="20" r="5"/><circle cx="440" cy="115" r="5"/><circle cx="60" cy="345" r="5"/></g><g fill="#b3ded8" font-family="monospace" font-size="12"><text x="265" y="19">SCAN</text><text x="418" y="100">DESIGN</text><text x="16" y="368">PRINT</text></g></svg></div>
 <div class="tech-copy"><div class="eyebrow">Technology / 03</div><h2>FROM IDEA<br>TO PHYSICAL.</h2><p>Exploring how a scan becomes a model, a model becomes a real part, and a prototype becomes something worth using.</p><ul><li><b>01</b> 3D scanning & reverse engineering</li><li><b>02</b> CAD & additive manufacturing</li><li><b>03</b> Electronics & computing</li><li><b>04</b> Smart systems, energy & workshop tools</li></ul></div></section>
 <section class="section" id="shop"><div class="section-heading"><div><div class="eyebrow">Paragon / 04</div><h2>WE MAKE THINGS.<br>WE WEAR THINGS.</h2></div><p>Projects can become products. Apparel and other releases will live here, with their own Shopify checkout.</p></div><div class="shop-grid"><article class="shop-card merch"><div class="eyebrow">Paragon Life / Apparel</div><div><h3>PARAGON<br>GOODS.</h3><p>Graphic tees, motorsport-inspired designs, and future releases. Store integration is being prepared.</p></div><span class="eyebrow">Collection coming soon</span></article>
-<article class="shop-card coffee" id="coffee"><div class="eyebrow">A separate Paragon brand</div><div><h3>PARAGON<br>COFFEE.</h3><p>An independent coffee brand with its own catalog, store, checkout, and experience.</p></div><a href="https://coffee.digitalparagon.com/" target="_blank" rel="noopener noreferrer">Visit Paragon Coffee ↗</a></article></div></section>
+<article class="shop-card coffee" id="coffee"><div class="eyebrow">A separate Paragon brand</div><div><h3>PARAGON<br>COFFEE.</h3><p>An independent coffee brand with its own catalog, store, checkout, and experience.</p></div><a href="https://coffee.digitalparagon.com/" target="_blank" rel="noopener noreferrer">Visit Paragon Coffee ↗</a></article></div><div id="live-products" class="live-products" hidden><div class="eyebrow">Shop / Paragon Life</div><h3>THE COLLECTION.</h3><div id="catalog-grid" class="catalog-grid"></div></div></section>
 <section class="section" id="journal"><div class="section-heading"><div><div class="eyebrow">The notebook / 05</div><h2>THINGS ON<br>THE WORKBENCH.</h2></div><p>Content will be published as the projects progress. No fabricated finished builds or performance numbers.</p></div><div class="note-grid"><article class="note"><div class="eyebrow">Automotive / Build notes</div><div><h3>THE CAYMAN S PROJECT</h3><p>Engine, suspension, braking, cooling, and the plan behind the finished car.</p></div></article><article class="note"><div class="eyebrow">Technology / Workshop</div><div><h3>SCAN. MODEL. PRINT.</h3><p>Reverse engineering the kind of parts that are easier to make than source.</p></div></article><article class="note"><div class="eyebrow">Technology / Systems</div><div><h3>THE EXPERIMENT NEVER ENDS.</h3><p>Electronics, energy, and practical systems worth testing.</p></div></article></div></section>
 <section class="section about" id="about"><div><div class="eyebrow">About Paragon Life</div><h2>ALWAYS A<br>NEW PROJECT.</h2></div><div><p>Paragon Life is a home for cars, technology, hands-on builds, products, and whatever else catches our attention. It's driven by curiosity, craftsmanship, and making things better.</p><a href="https://www.instagram.com/paragon.life/" target="_blank" rel="noopener noreferrer">Follow the projects ↗</a></div></section>
 </main>
+<div id="cart-overlay" class="cart-overlay" hidden></div><aside id="cart-drawer" class="cart-drawer" role="dialog" aria-modal="true" aria-label="Shopping bag" hidden><div class="cart-head"><h2>Your bag</h2><button id="cart-close" type="button" aria-label="Close shopping bag">×</button></div><div id="cart-lines" class="cart-lines"></div><div class="cart-bottom"><div>Subtotal <strong id="cart-subtotal">$0.00</strong></div><p>Taxes and shipping calculated at Shopify checkout.</p><button id="checkout" type="button" disabled>Checkout ↗</button><div id="cart-status" role="status" aria-live="polite"></div></div></aside>
 <footer class="footer"><div class="footer-main"><div class="footer-title">PARAGON<br>LIFE<small>Automotive / Technology / Beyond</small></div><div class="footer-nav"><div><strong>Explore</strong><a href="#automotive">Automotive</a><a href="#technology">Technology</a><a href="#projects">Projects</a></div><div><strong>Brands</strong><a href="#shop">Paragon Apparel</a><a href="https://coffee.digitalparagon.com/">Paragon Coffee</a><a href="https://digitalparagon.com/">Digital Paragon</a></div><div><strong>Connect</strong><a href="https://www.instagram.com/paragon.life/">Instagram</a><a href="/sitemap.xml">Sitemap</a><span>California</span></div></div></div><div class="footer-bottom"><span>© 2026 Paragon Life</span><span>Designed & developed by Digital Paragon</span></div></footer>
-<script>
-const m=document.getElementById('menu'),nav=document.getElementById('mobile-nav');
-m.addEventListener('click',()=>{const open=nav.classList.toggle('open');m.setAttribute('aria-expanded',String(open))});
-nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');m.setAttribute('aria-expanded','false')}));
-(async()=>{const images=[...document.querySelectorAll('[data-image]')];for(const path of new Set(images.map(x=>x.dataset.image))){try{const r=await fetch('/'+path);if(!r.ok)continue;const b64=(await r.text()).trim();const src='data:image/webp;base64,'+b64;images.filter(x=>x.dataset.image===path).forEach(x=>x.src=src)}catch{}}})();
-</script>
+<script src="/assets/site.js" defer></script>
 </body></html>
