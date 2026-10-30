@@ -42,3 +42,23 @@ body.menu-open{overflow:hidden}
 .youtube-icon{display:inline-block;vertical-align:middle;flex:none}
 @media(max-width:850px){.youtube-feature{grid-template-columns:1fr;gap:28px}}
 @media(max-width:620px){.top{font-size:9px;letter-spacing:.05em}.top span:last-child{display:none}.youtube-feature{padding:55px 22px}.youtube-feature h2{font-size:54px}.youtube-feature__topics span{font-size:9px}}
+
+/* Coffee-style header bag and dedicated site-wide cart on Hydrogen. */
+.bar>.bag{cursor:pointer;white-space:nowrap;background:transparent;color:var(--ink);font-size:12px;font-weight:600}
+.bar>.bag:hover{background:var(--ink);color:var(--paper);opacity:1}
+.bar>.bag:focus-visible{outline:2px solid #168ce2;outline-offset:3px}
+body.cart-active{overflow:hidden}
+.life-cart-scrim{position:fixed;inset:0;background:#0009;z-index:59}
+.life-cart-drawer{position:fixed;z-index:60;inset:0 0 0 auto;width:min(440px,100%);background:var(--paper);color:var(--ink);padding:26px;display:flex;flex-direction:column;box-shadow:-15px 0 50px #0003}
+.life-cart-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+.life-cart-head h2{font-size:36px;font-weight:600}
+.life-cart-head button{font-size:30px;border:0;background:transparent;cursor:pointer;color:var(--ink)}
+.life-cart-items{flex:1;overflow:auto;padding:25px 0}
+.life-cart-items p{font-size:14px;line-height:1.7}
+.life-cart-item{padding:16px 0;display:grid;gap:6px;border-bottom:1px solid var(--line);font-size:13px}
+.life-cart-item span{color:#595e56}
+.life-cart-summary{border-top:1px solid var(--line);padding-top:20px}
+.life-cart-summary>div{display:flex;justify-content:space-between;font-size:14px;font-weight:600}
+.life-cart-summary p{font-size:12px;color:#595e56}
+.life-cart-summary button{width:100%;padding:14px;background:var(--ink);color:var(--paper);border:0;cursor:pointer}
+.life-cart-summary button:disabled{opacity:.45;cursor:not-allowed}

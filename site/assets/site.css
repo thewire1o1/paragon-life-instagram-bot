@@ -185,3 +185,11 @@ body.menu-open{overflow:hidden}
 .youtube-icon{flex:none;vertical-align:middle}
 @media(max-width:920px){.youtube-feature{grid-template-columns:1fr;gap:30px}.youtube-feature h2{font-size:clamp(57px,10vw,89px)}}
 @media(max-width:520px){.youtube-feature{padding:55px var(--pad)}.youtube-feature h2{font-size:clamp(56px,12vw,70px)}.youtube-feature__play{width:66px;height:66px}.youtube-feature__poster-label{top:14px;left:16px}.youtube-feature__poster-label strong{font-size:25px}.youtube-feature__topics span{font-size:9px}}
+
+/* Commerce utility follows Coffee: visible shopping bag in the header; social stays in footer. */
+.head-inner>.cart-open{display:inline-flex;align-items:center;justify-content:center;margin-left:auto;border:1px solid var(--ink);background:transparent;color:var(--ink);min-height:42px;padding:10px 13px;font-size:11px;line-height:1.1;font-weight:700;letter-spacing:.035em;text-transform:none}
+.head-inner>.cart-open:hover{background:var(--ink);color:var(--paper)}
+.head-inner>.cart-open:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.cart-empty-note{font-size:13px;color:#595e56}
+@media(max-width:1100px){.head-inner>.cart-open{margin-left:auto}.head-inner>.menu-btn{margin-left:0}}
+@media(max-width:560px){.head-inner{gap:12px}.head-inner>.cart-open{min-height:38px;padding:8px 10px;font-size:11px}.logo-words small{letter-spacing:.12em}}

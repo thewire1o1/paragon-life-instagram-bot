@@ -55,7 +55,7 @@ async function requestShop(path,method='GET',data){
 }
 function setCartOpen(open){
  cartDrawer.hidden=!open;cartOverlay.hidden=!open;document.body.classList.toggle('cart-active',open);
- if(open)cartClose.focus();else cartOpen.focus();
+ if(open){if(!nav.hidden)setMenu(false,{restoreFocus:false});cartClose.focus()}else cartOpen.focus();
 }
 function make(tag,text,className){
  const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(className)node.className=className;return node;
@@ -65,7 +65,7 @@ function updateCart(){
  cartSubtotal.textContent=amount(cart.subtotal,cart.currency);
  checkoutButton.disabled=!cart.count;
  cartLines.replaceChildren();
- if(!cart.items.length){cartLines.append(make('p','Your bag is empty.'));return;}
+ if(!cart.items.length){cartLines.append(make('p','Your bag is empty.'));const status=make('p','Paragon Merch checkout is coming soon.');status.className='cart-empty-note';cartLines.append(status);return;}
  cart.items.forEach(item=>{
   const box=make('div',undefined,'cart-item');
   const title=make('strong',item.title);
@@ -107,8 +107,9 @@ function renderCatalog(products){
   add.addEventListener('click',()=>addItem(select.value,1,add));
   item.append(select,add);shopGrid.append(item);
  }
- if(shopGrid.children.length){liveProducts.hidden=false;cartOpen.hidden=false}
+ if(shopGrid.children.length){liveProducts.hidden=false}
 }
+updateCart();
 cartOpen.addEventListener('click',()=>setCartOpen(true));
 cartClose.addEventListener('click',()=>setCartOpen(false));
 cartOverlay.addEventListener('click',()=>setCartOpen(false));
