@@ -151,3 +151,13 @@ body.menu-open{overflow:hidden}
 .external-link{display:inline-flex;align-items:center;gap:6px}
 .external-icon{display:inline-block;flex:none;vertical-align:middle;width:15px;height:15px}
 .shop-card.coffee .external-icon{width:16px;height:16px}
+
+/* Paragon Life parent-brand hierarchy. No changes to footer columns. */
+.footer-nav .footer-parent-brand{display:block;font-size:20px;font-weight:700;line-height:1.2;letter-spacing:.005em;margin-top:16px;color:#f3f1e9}
+.footer-nav .footer-parent-label{display:block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#8cb19a;margin-top:5px}
+.footer-children{margin-top:19px;padding-left:15px;border-left:1px solid #8cb19a66}
+.footer-nav .footer-child-heading{display:block;margin-top:0;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#8cb19a}
+.footer-children a{margin-top:15px}
+.external-link,.footer-nav a.external-link{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;max-width:100%}
+.coffee-brand-mark{display:inline-block;flex:none;width:18px;height:18px;vertical-align:middle}
+.external-icon{width:15px;height:15px;display:inline-block;flex:none;vertical-align:middle}

@@ -21,3 +21,8 @@ body.menu-open{overflow:hidden}
 
 .external-link{display:inline-flex;align-items:center;gap:6px}
 .external-icon{display:inline-block;flex:none;vertical-align:middle}
+
+/* Brand hierarchy and consistent outbound links on the Cloudflare build. */
+.external-link{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}
+.coffee-brand-mark{display:inline-block;flex:none;width:18px;height:18px}
+.external-icon{display:inline-block;flex:none;width:15px;height:15px}
