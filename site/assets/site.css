@@ -193,3 +193,6 @@ body.menu-open{overflow:hidden}
 .cart-empty-note{font-size:13px;color:#595e56}
 @media(max-width:1100px){.head-inner>.cart-open{margin-left:auto}.head-inner>.menu-btn{margin-left:0}}
 @media(max-width:560px){.head-inner{gap:12px}.head-inner>.cart-open{min-height:38px;padding:8px 10px;font-size:11px}.logo-words small{letter-spacing:.12em}}
+
+/* Use the actual Coffee storefront monogram, not a rebuilt favicon symbol. */
+.coffee-brand-mark{display:inline-block;width:22px;height:22px;min-width:22px;object-fit:contain;vertical-align:middle;border:0;background:transparent}

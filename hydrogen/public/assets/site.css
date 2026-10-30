@@ -62,3 +62,6 @@ body.cart-active{overflow:hidden}
 .life-cart-summary p{font-size:12px;color:#595e56}
 .life-cart-summary button{width:100%;padding:14px;background:var(--ink);color:var(--paper);border:0;cursor:pointer}
 .life-cart-summary button:disabled{opacity:.45;cursor:not-allowed}
+
+/* Use the actual Coffee storefront monogram, not a rebuilt favicon symbol. */
+.coffee-brand-mark{display:inline-block;width:22px;height:22px;min-width:22px;object-fit:contain;vertical-align:middle;border:0;background:transparent}

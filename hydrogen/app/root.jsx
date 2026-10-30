@@ -2,7 +2,7 @@ import {Links,Meta,Outlet,Scripts,ScrollRestoration,isRouteErrorResponse,useRout
 import {useNonce} from '@shopify/hydrogen';
 import {useState,useEffect,useRef} from 'react';
 function ExternalIcon(){return <svg className="external-icon" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" focusable="false"><path d="M14 4h6v6M20 4l-9 9M20 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>}
-function CoffeeMark(){return <svg className="coffee-brand-mark" viewBox="0 0 32 32" width="18" height="18" aria-hidden="true" focusable="false"><path d="M16.1 16.04 1 8.02 6.16 5.3l5.82 3.09 4.88-2.57-5.82-3.1L16.21 0l15.1 8.02-5.17 2.72-5.5-2.91-4.88 2.57 5.5 2.92-5.16 2.72Z" fill="none" stroke="currentColor" strokeWidth="1"/><path d="M16.1 32 1 23.98l5.16-2.72 5.82 3.08 4.88-2.57-5.82-3.08 5.17-2.73 15.1 8.02-5.17 2.72-5.5-2.92-4.88 2.58 5.5 2.92L16.1 32Z" fill="currentColor"/></svg>}
+function CoffeeMark(){return <img className="coffee-brand-mark" src="https://coffee.digitalparagon.com/assets/brand/paragon-monogram.webp" width="22" height="22" alt="" decoding="async"/>}
 const nav=[['/','Home'],['/shop','Paragon Merch'],['/builds','Builds'],['/technology','Technology'],['/story','Our story'],['/#youtube','YouTube']];
 export function links(){return [
 {rel:'preconnect',href:'https://fonts.googleapis.com'},
