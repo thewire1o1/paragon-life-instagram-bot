@@ -26,3 +26,19 @@ body.menu-open{overflow:hidden}
 .external-link{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}
 .coffee-brand-mark{display:inline-block;flex:none;width:18px;height:18px}
 .external-icon{display:inline-block;flex:none;width:15px;height:15px}
+
+/* Paragon Life top identity line and YouTube feature */
+.top{display:flex;justify-content:space-between;gap:15px;background:#171b17;color:#e7e2da;padding:10px clamp(19px,5vw,70px);font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase}
+.youtube-feature{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(24px,5vw,75px);align-items:center;padding:75px clamp(22px,5vw,80px);background:#cbc6bd;color:#171717}
+.youtube-feature__tag{display:flex;align-items:center;gap:12px;font-size:11px;font-weight:700;letter-spacing:.13em}.youtube-feature__tag .youtube-icon{color:#a92222}
+.youtube-feature h2{font-size:clamp(40px,5.5vw,82px);font-weight:700;line-height:.95;letter-spacing:-.02em;margin:25px 0}
+.youtube-feature__intro p{font-size:14px;line-height:1.7;color:#444;max-width:490px;margin-bottom:28px}
+.youtube-feature__button{display:inline-flex;gap:11px;align-items:center;background:#171717;color:#fff;padding:17px 19px;font-size:12px;font-weight:700}
+.youtube-feature__poster{aspect-ratio:16/9;position:relative;display:grid;place-items:center;background:linear-gradient(0deg,#000b,#0004),url('/assets/hero-desert.jpg') center/cover;color:white}
+.youtube-feature__poster-label{position:absolute;top:20px;left:23px;display:flex;flex-direction:column;gap:6px}
+.youtube-feature__poster-label span{font-size:10px;letter-spacing:.15em}.youtube-feature__poster-label strong{font-size:clamp(18px,2vw,28px)}
+.youtube-feature__play{width:75px;height:75px;display:grid;place-items:center;border:2px solid white;border-radius:50%;background:#141a18aa}
+.youtube-feature__topics{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;border-bottom:1px solid #aaa49b;padding:16px 0}.youtube-feature__topics span{font-size:10px;font-weight:700;letter-spacing:.05em}.youtube-feature__caption{font-size:11px;color:#5f615b}
+.youtube-icon{display:inline-block;vertical-align:middle;flex:none}
+@media(max-width:850px){.youtube-feature{grid-template-columns:1fr;gap:28px}}
+@media(max-width:620px){.top{font-size:9px;letter-spacing:.05em}.top span:last-child{display:none}.youtube-feature{padding:55px 22px}.youtube-feature h2{font-size:54px}.youtube-feature__topics span{font-size:9px}}

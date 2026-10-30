@@ -161,3 +161,27 @@ body.menu-open{overflow:hidden}
 .external-link,.footer-nav a.external-link{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;max-width:100%}
 .coffee-brand-mark{display:inline-block;flex:none;width:18px;height:18px;vertical-align:middle}
 .external-icon{width:15px;height:15px;display:inline-block;flex:none;vertical-align:middle}
+
+/* The lifestyle brand line in the announcement bar stays readable on mobile. */
+.top span:first-child{white-space:normal;line-height:1.5}
+@media(max-width:560px){.top{align-items:center;gap:10px}.top span:first-child{font-size:9px;letter-spacing:.065em}.top .external-icon{width:12px;height:12px}}
+/* Creator-first editorial YouTube section immediately after the hero. */
+.youtube-feature{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(24px,5vw,76px);align-items:center;padding:clamp(65px,7vw,100px) var(--pad);background:#cbc6bd;color:#181e19}
+.youtube-feature__tag{display:flex;align-items:center;gap:12px;font-size:11px;font-weight:700;letter-spacing:.13em}
+.youtube-feature__tag .youtube-icon{color:#a92222}
+.youtube-feature h2{font-size:clamp(59px,6vw,96px);line-height:.86;letter-spacing:-.006em;margin:24px 0 18px}
+.youtube-feature__intro p{font-size:14px;line-height:1.7;max-width:490px;color:#45483e;margin:0 0 28px}
+.youtube-feature__button{display:inline-flex;gap:11px;align-items:center;background:#181e19;color:#f2efe9;padding:17px 19px;font-size:12px;font-weight:700;letter-spacing:.025em;text-decoration:none}
+.youtube-feature__button:hover{background:#333c34}
+.youtube-feature__preview{min-width:0}
+.youtube-feature__poster{aspect-ratio:16/9;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(0deg,#000b,#0004),url('/assets/hero-desert.jpg') center/cover no-repeat;color:#fff}
+.youtube-feature__poster-label{position:absolute;top:20px;left:23px;display:flex;flex-direction:column;gap:6px}
+.youtube-feature__poster-label span{font-size:10px;letter-spacing:.18em;color:#d5d2ca}
+.youtube-feature__poster-label strong{font:700 clamp(24px,2.5vw,40px)/1 "Barlow Condensed",sans-serif;letter-spacing:.03em}
+.youtube-feature__play{border:2px solid #fffb;width:78px;height:78px;display:grid;place-items:center;border-radius:50%;background:#141a18aa}
+.youtube-feature__topics{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;border-bottom:1px solid #aaa49b;padding:16px 0 14px}
+.youtube-feature__topics span{font-size:10px;letter-spacing:.08em;font-weight:700}
+.youtube-feature__caption{font-size:11px;color:#606258;margin:10px 0 0}
+.youtube-icon{flex:none;vertical-align:middle}
+@media(max-width:920px){.youtube-feature{grid-template-columns:1fr;gap:30px}.youtube-feature h2{font-size:clamp(57px,10vw,89px)}}
+@media(max-width:520px){.youtube-feature{padding:55px var(--pad)}.youtube-feature h2{font-size:clamp(56px,12vw,70px)}.youtube-feature__play{width:66px;height:66px}.youtube-feature__poster-label{top:14px;left:16px}.youtube-feature__poster-label strong{font-size:25px}.youtube-feature__topics span{font-size:9px}}
