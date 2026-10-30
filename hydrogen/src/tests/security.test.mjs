@@ -29,3 +29,5 @@ test('Hydrogen homepage is creator-led, without merchandise placeholder section'
  assert.doesNotMatch(landing,/Collection coming soon/);
  assert.match(landing,/Explore the videos/);
 });
+
+test('Hydrogen preserves branded DP credit and compact creator layout',()=>{assert.match(root,/digital-paragon-icon\.png/);assert.match(root,/Designed &amp; developed by Digital Paragon/);assert.doesNotMatch(landing,/EPISODE 01/);});

@@ -61,3 +61,5 @@ test('homepage does not contain the redundant merchandise or Coffee promo sectio
  assert.doesNotMatch(html,/href="#shop"/);
  assert.match(html,/href="https:\/\/coffee\.digitalparagon\.com\//);
 });
+
+test('presentation has no AI-style project numbering, parent label, or California footer filler',()=>{assert.doesNotMatch(html,/The world of Paragon \/ 01|Automotive \/ 02|Technology \/ 03|Parent brand|<span>California<\/span>|Project \/ 0[1-9]/i);assert.match(html,/Our brands/);assert.match(html,/class="life-brand-mark"/);assert.match(html,/class="digital-paragon-mark"/);assert.match(html,/class="social-icon"/);assert.match(html,/href="\/sitemap.html">Sitemap/);});

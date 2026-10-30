@@ -82,3 +82,12 @@ body.cart-active{overflow:hidden}
  .footer{padding:43px 22px 23px;gap:20px}
  .page{min-height:0;padding:45px 22px}
 }
+
+/* Compact creator typography and original Digital Paragon brand credit */
+.hero h1{font-family:"DM Sans",Arial,sans-serif;font-size:clamp(35px,5vw,58px);line-height:1.12;letter-spacing:-.035em}
+.youtube-feature h2{font-family:"DM Sans",Arial,sans-serif;font-size:clamp(33px,4.2vw,53px);line-height:1.15;letter-spacing:-.035em}
+.section h2,.story-strip h2{font-family:"DM Sans",Arial,sans-serif;font-size:clamp(31px,4vw,52px);line-height:1.16;letter-spacing:-.035em}
+.features h3{font-size:clamp(20px,2.1vw,29px);line-height:1.2}
+.footer .digital-paragon-mark,.digital-paragon-mark{width:22px;height:22px;object-fit:contain;vertical-align:middle;flex:none}
+.footer small a.external-link{display:inline-flex;align-items:center;gap:5px;color:inherit}
+@media(max-width:620px){.youtube-feature h2{font-size:36px}.hero h1{font-size:40px}.section h2{font-size:35px}}
