@@ -5,6 +5,7 @@ function ExternalIcon(){return <svg className="external-icon" viewBox="0 0 24 24
 function CoffeeMark(){return <img className="coffee-brand-mark" src="https://coffee.digitalparagon.com/assets/brand/paragon-monogram.webp" width="22" height="22" alt="" decoding="async"/>}
 const nav=[['/','Home'],['/shop','Paragon Merch'],['/builds','Builds'],['/technology','Technology'],['/story','Our story'],['/#youtube','YouTube']];
 export function links(){return [
+{rel:'icon',type:'image/webp',sizes:'192x192',href:'/assets/favicon.webp'},
 {rel:'preconnect',href:'https://fonts.googleapis.com'},
 {rel:'preconnect',href:'https://fonts.gstatic.com',crossOrigin:'anonymous'},
 {rel:'stylesheet',href:'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap'},
