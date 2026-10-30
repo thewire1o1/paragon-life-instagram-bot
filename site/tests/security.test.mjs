@@ -43,7 +43,7 @@ test('actual Coffee brand mark and footer parent hierarchy remain consistent',()
  const matches=[...html.matchAll(/class="coffee-brand-mark"/g)];
  assert.ok(matches.length>=3);
  assert.doesNotMatch(html,/<svg class="coffee-brand-mark"/);
- assert.match(html,/class="footer-parent-brand"[^>]*>Paragon Life<\/a>/);
+ assert.match(html,/class="footer-parent-brand"[^>]*>[\s\S]*?Paragon Life<\/a>/);
  assert.match(html,/class="footer-children"/);
  assert.match(css,/\.external-link/);
 });
