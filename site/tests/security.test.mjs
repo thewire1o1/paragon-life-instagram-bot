@@ -22,3 +22,34 @@ test('validated GIDs and a sanitized public cart',()=>{
  assert.ok(validLine('gid://shopify/CartLine/123'));
  assert.deepEqual(publicCart(null),{items:[],subtotal:0,currency:'USD',count:0});
 });
+
+import {readFileSync,existsSync} from 'node:fs';
+import {join} from 'node:path';
+const root=new URL('../',import.meta.url);
+const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const css=readFileSync(new URL('../assets/site.css',import.meta.url),'utf8');
+test('Paragon Life original favicon is shipped and linked',()=>{
+ assert.ok(existsSync(new URL('../assets/favicon.webp',import.meta.url)));
+ assert.match(html,/<link rel="icon"[^>]+href="\/assets\/favicon.webp"/);
+});
+test('store navigation uses a visible shared shopping bag and preserves Instagram in footer',()=>{
+ assert.match(html,/<button[^>]+id="cart-open"[^>]*>Bag \(<span id="cart-count">0<\/span>\)<\/button>/);
+ assert.doesNotMatch(html,/<button[^>]+id="cart-open"[^>]* hidden/);
+ const top=html.match(/<div class="top">[\s\S]*?<\/div>/)?.[0]||'';
+ assert.doesNotMatch(top,/instagram/ig);
+ assert.match(html,/<footer[\s\S]*?Instagram[\s\S]*?<\/footer>/);
+});
+test('actual Coffee brand mark and footer parent hierarchy remain consistent',()=>{
+ const matches=[...html.matchAll(/class="coffee-brand-mark"/g)];
+ assert.ok(matches.length>=3);
+ assert.doesNotMatch(html,/<svg class="coffee-brand-mark"/);
+ assert.match(html,/class="footer-parent-brand"[^>]*>Paragon Life<\/a>/);
+ assert.match(html,/class="footer-children"/);
+ assert.match(css,/\.external-link/);
+});
+test('YouTube appears immediately after approved hero, with no fake playable videos',()=>{
+ assert.match(html,/id="youtube"/);
+ assert.match(html,/VIDEOS COMING SOON/);
+ assert.ok(html.indexOf('id="youtube"')<html.indexOf('id="projects"'));
+ assert.match(html,/A Southern California Lifestyle Brand/);
+});
