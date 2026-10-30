@@ -2,7 +2,7 @@
 const m=document.getElementById('menu'),nav=document.getElementById('mobile-nav');
 m.addEventListener('click',()=>{const open=nav.classList.toggle('open');m.setAttribute('aria-expanded',String(open))});
 nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');m.setAttribute('aria-expanded','false')}));
-(async()=>{const images=[...document.querySelectorAll('[data-image]')];for(const path of new Set(images.map(x=>x.dataset.image))){try{let r=await fetch('/'+path);if(!r.ok)r=await fetch('https://raw.githubusercontent.com/thewire1o1/paragon-life-instagram-bot/site-paragon-life-v2/'+path);if(!r.ok)continue;const b64=(await r.text()).trim();const src='data:image/webp;base64,'+b64;images.filter(x=>x.dataset.image===path).forEach(x=>x.src=src)}catch{}}})();
+(async()=>{const images=[...document.querySelectorAll('[data-image]')];for(const path of new Set(images.map(x=>x.dataset.image))){try{let r=await fetch('/'+path);if(!r.ok)r=await fetch('https://raw.githubusercontent.com/thewire1o1/paragon-life-instagram-bot/site-paragon-life-v2/'+path);if(!r.ok)continue;let b64=(await r.text()).trim();if(/[^A-Za-z0-9+/=\s]/.test(b64)){const fallback=await fetch('https://raw.githubusercontent.com/thewire1o1/paragon-life-instagram-bot/site-paragon-life-v2/'+path);if(!fallback.ok)continue;b64=(await fallback.text()).trim()}if(/[^A-Za-z0-9+/=\s]/.test(b64))continue;const src='data:image/webp;base64,'+b64;images.filter(x=>x.dataset.image===path).forEach(x=>x.src=src)}catch{}}})();
 
 const shopGrid=document.getElementById('catalog-grid');
 const liveProducts=document.getElementById('live-products');
