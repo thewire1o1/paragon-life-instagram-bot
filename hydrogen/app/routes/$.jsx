@@ -1,0 +1,1 @@
+import {data} from 'react-router';export function loader(){throw data({message:'Not found'},{status:404})};export default function Missing(){return <main className="page" id="main"><h1>Page not found.</h1><a href="/">Return home</a></main>}

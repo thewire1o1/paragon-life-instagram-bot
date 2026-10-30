@@ -1,0 +1,1 @@
+import {handleAPI} from '../../src/server/index.js';export const loader=({request,context})=>handleAPI(request,context.env,new URL(request.url));export const action=({request,context})=>handleAPI(request,context.env,new URL(request.url));

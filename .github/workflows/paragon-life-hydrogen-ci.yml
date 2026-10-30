@@ -1,0 +1,23 @@
+name: Paragon Life Hydrogen CI
+on:
+  push:
+    branches: [site-paragon-life-v2]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hydrogen
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: hydrogen/package-lock.json
+      - run: npm ci --no-audit
+      - run: npm run build:cloudflare
+      - run: test -s dist/client/_worker.js && test -s dist/client/assets/site.css
