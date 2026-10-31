@@ -287,10 +287,10 @@ nav.main a:hover,footer a:hover{color:var(--blue-soft);}
 
 
 /* Merchandise uses the established Paragon Life type, color and control system. */
-nav.main a.nav-merch{color:var(--blue);border-bottom:1px solid currentColor}
-nav.main a.nav-merch:hover{color:var(--blue-soft)}
+nav.main a.nav-merch{display:inline-flex;align-items:center;background:var(--blue-deep);color:#f4f1ed;padding:10px 13px;border:1px solid var(--blue-deep);font:600 11px/1.3 var(--display);letter-spacing:0}
+nav.main a.nav-merch:hover{color:#fff;background:var(--blue);border-color:var(--blue)}
 .mobile-nav__shop{color:var(--blue)}
-.merch-header-ribbon{display:none!important}
+.merch-header-ribbon{display:none}
 .merch-feature{background:var(--dark);color:#f4f1ed;padding:clamp(42px,5vw,76px) var(--pad);border-bottom:1px solid #34454e}
 .merch-feature-head,.merch-feature-grid,.merch-feature-foot{max-width:1510px;margin:0 auto}
 .merch-feature-head{display:flex;justify-content:space-between;align-items:end;gap:22px;margin-bottom:29px}
@@ -338,3 +338,17 @@ nav.main a.nav-merch:hover{color:var(--blue-soft)}
 .merch-feature-foot{align-items:flex-start;flex-direction:column;gap:11px}
 }
 @media(max-width:360px){.merch-feature-grid{grid-template-columns:1fr 1fr;gap:8px}.merch-item-caption strong{font-size:14px}.merch-item-cta{font-size:10px}}
+
+/* Keep merchandise accessible from the sticky mobile header, using site typography and palette. */
+@media(max-width:920px){
+ .header .merch-header-ribbon{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:40px;padding:9px var(--pad);background:var(--paper);color:var(--ink);border-top:1px solid var(--line);text-decoration:none}
+ .merch-header-ribbon .merch-ribbon-label{font:600 12px/1.35 var(--display);letter-spacing:-.01em}
+ .merch-header-ribbon .merch-ribbon-action{font:600 11px/1.35 var(--body);color:var(--blue);white-space:nowrap}
+ .merch-header-ribbon:hover .merch-ribbon-action,.merch-header-ribbon:focus-visible .merch-ribbon-action{color:var(--ink)}
+ .merch-header-ribbon:focus-visible{outline:2px solid var(--blue);outline-offset:-3px}
+}
+@media(max-width:360px){
+ .header .merch-header-ribbon{gap:7px}
+ .merch-header-ribbon .merch-ribbon-label{font-size:11px}
+ .merch-header-ribbon .merch-ribbon-action{font-size:10px}
+}
