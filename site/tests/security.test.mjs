@@ -63,3 +63,19 @@ test('homepage does not contain the redundant merchandise or Coffee promo sectio
 });
 
 test('presentation has no AI-style project numbering, parent label, or California footer filler',()=>{assert.doesNotMatch(html,/The world of Paragon \/ 01|Automotive \/ 02|Technology \/ 03|Parent brand|<span>California<\/span>|Project \/ 0[1-9]/i);assert.match(html,/Our brands/);assert.match(html,/class="life-brand-mark"/);assert.match(html,/class="digital-paragon-mark"/);assert.match(html,/class="social-icon"/);assert.match(html,/href="\/sitemap.html">Sitemap/);});
+
+test('Paragon Merch is a real destination in all navigation without restoring the homepage promo',()=>{
+ const page=readFileSync(new URL('../shop/index.html',import.meta.url),'utf8');
+ assert.match(html,/<a href="\/shop\/">Paragon Merch<\/a>/);
+ assert.match(page,/<h1>Paragon Merch<\/h1>/);
+ assert.match(page,/id="catalog-grid"/);
+ assert.match(page,/id="cart-open"/);
+ assert.doesNotMatch(html,/id="shop"|PARAGON<br>GOODS\./);
+});
+test('all outbound links end with an outbound marker, including Coffee and Digital Paragon',()=>{
+ const anchors=[...html.matchAll(/<a\b[^>]*href="https?:\/\/[^"]+"[^>]*>[\s\S]*?<\/a>/g)];
+ assert.ok(anchors.length>=5);
+ for(const [anchor] of anchors){
+  assert.match(anchor,/<svg class="external-icon"[\s\S]*?<\/svg><\/a>$/);
+ }
+});

@@ -91,3 +91,7 @@ body.cart-active{overflow:hidden}
 .footer .digital-paragon-mark,.digital-paragon-mark{width:22px;height:22px;object-fit:contain;vertical-align:middle;flex:none}
 .footer small a.external-link{display:inline-flex;align-items:center;gap:5px;color:inherit}
 @media(max-width:620px){.youtube-feature h2{font-size:36px}.hero h1{font-size:40px}.section h2{font-size:35px}}
+
+/* Consistent placement: outbound indicator follows the whole label, brand art stays before it. */
+a.external-link{display:inline-flex;align-items:center;gap:7px}
+a.external-link .external-icon{order:10;margin-left:1px;flex:none}
