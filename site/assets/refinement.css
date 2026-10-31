@@ -168,3 +168,8 @@ nav.main a:hover,footer a:hover{color:var(--blue-soft);}
  .footer-nav .footer-children a.external-link{gap:8px}
  .mobile-nav__main>a,.mobile-nav__disclosure>summary{font-size:17px}
 }
+
+/* Optical rather than just CSS-box equality: the original DP art has built-in transparent margins. */
+.footer-nav .life-brand-mark{width:24px!important;height:24px!important;max-width:24px!important;max-height:24px!important;flex:0 0 24px!important}
+.footer-nav .coffee-brand-mark{width:24px!important;height:24px!important;max-width:24px!important;max-height:24px!important;flex:0 0 24px!important}
+.footer-nav .digital-paragon-mark{width:32px!important;height:32px!important;max-width:32px!important;max-height:32px!important;flex:0 0 32px!important;margin:-4px -4px -4px -4px}
