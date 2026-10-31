@@ -528,3 +528,54 @@ body.menu-open .life-message-bubble,body.cart-active .life-message-bubble{displa
 
 /* Reserve space for the floating Instagram contact button at the end of the mobile footer. */
 @media(max-width:760px){.footer.life-footer{padding-bottom:90px}}
+
+
+/* Account & category navigation. Extend Life's existing type system. */
+.life-account-link{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 4px;color:var(--ink);font:600 12px/1.4 var(--display);text-decoration:none;white-space:nowrap}
+.life-account-link:hover,.life-account-link:focus-visible{color:var(--blue)}
+.head-inner>.life-account-link{margin-left:auto}
+.head-inner>.cart-open{margin-left:0}
+@media(max-width:1100px){.head-inner>.life-account-link{margin-left:auto}}
+@media(max-width:560px){.head-inner{gap:9px}.head-inner>.life-account-link{font-size:11px;padding:0 2px}}
+@media(max-width:360px){.logo-words{font-size:21px!important}.head-inner>.life-account-link{font-size:10px}.head-inner>.cart-open{font-size:10px!important}}
+.merch-category-page{min-height:55vh}
+.category-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:10px;color:#5c6e7b;font:600 12px/1.4 var(--body);margin-bottom:24px}
+.category-crumb a{color:var(--blue)}
+.category-explore{margin:0 0 29px;padding:12px 0 15px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.category-explore>span{display:block;color:var(--blue);font:700 10px/1.4 var(--body);letter-spacing:.13em;text-transform:uppercase;margin-bottom:10px}
+.category-explore>div{display:flex;align-items:center;gap:8px 19px;flex-wrap:wrap}
+.category-explore a{font:600 12px/1.5 var(--body);color:#304f68}
+.category-explore a:hover{text-decoration:underline}
+.merch-category-page .shop-category-detail{border:0;padding:0}
+.merch-category-page .shop-category-detail p{margin-bottom:14px}
+.merch-category-page .shop-products-preview{max-width:900px}
+.merch-category-page .shop-products-preview .merch-item{min-width:0}
+.account-page{padding:clamp(40px,6vw,75px) var(--pad);background:var(--paper);min-height:58vh}
+.account-shell{max-width:1060px;margin:0 auto}
+.account-crumb{font:500 12px/1.5 var(--body);color:#586a74;display:flex;gap:12px}
+.account-crumb a{color:var(--blue)}
+.account-page h1{font:600 clamp(37px,5vw,62px)/1.13 var(--display);letter-spacing:-.045em;margin:22px 0 13px}
+.account-lede{font:400 16px/1.65 var(--body);color:#506674;margin:0 0 35px}
+.account-preview{border:1px solid #aeb7bb;background:#e3e1dc;padding:clamp(18px,3.5vw,35px)}
+.account-preview>.eyebrow{color:#52718a}
+.account-preview h2{font:600 clamp(24px,3.5vw,36px)/1.18 var(--display);margin:12px 0}
+.account-preview p{font:400 14px/1.65 var(--body);color:#53636d;max-width:780px}
+.account-primary,.account-secondary{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:0;border:1px solid var(--blue-deep);padding:13px 19px;font:600 13px/1.45 var(--body);cursor:pointer}
+.account-primary{background:var(--blue-deep);color:#fff}.account-primary:hover{background:var(--blue)}
+.account-secondary{color:var(--blue-deep);background:transparent}.account-secondary:hover{background:#e1e7e8}
+.account-tabs{display:flex;gap:9px;overflow-x:auto;padding:2px 0 6px;margin:28px 0 23px;border-bottom:1px solid var(--line)}
+.account-tabs [role="tab"]{flex:none;background:transparent;color:var(--blue);border:1px solid transparent;padding:11px 13px;cursor:pointer;font:600 12px/1.4 var(--body)}
+.account-tabs [aria-selected="true"]{border-color:var(--blue);background:#d6e0e5;color:var(--ink)}
+.account-panel h2{font:600 clamp(25px,3.5vw,37px)/1.2 var(--display);letter-spacing:-.035em;margin:13px 0 20px}
+.account-empty{padding:clamp(19px,3vw,31px);border:1px solid #aeb7bb;background:#eceae5}
+.account-empty h3{font:600 clamp(19px,2.4vw,28px)/1.25 var(--display);margin:0 0 10px}
+.account-empty p{font:400 13px/1.65 var(--body);color:#5e6c72;margin:0 0 20px}
+.account-panel[hidden],.account-login-dialog[hidden]{display:none!important}
+.account-login-dialog{position:fixed;z-index:100;inset:0;background:#061018ad;display:flex;align-items:center;justify-content:center;padding:18px}
+.account-login-content{background:var(--paper);border:1px solid var(--blue);padding:clamp(21px,4vw,34px);max-width:470px;width:100%;box-shadow:0 22px 60px #0005}
+.account-login-content h2{font:600 29px/1.17 var(--display);margin:10px 0}
+.account-login-content p{font:400 13px/1.7 var(--body);color:#435865}
+.account-login-content button{margin-top:14px}
+.featured .featured-copy{z-index:2}
+.featured img[src*="cayman-45-poster"]{object-fit:cover;object-position:center 45%}
+@media(max-width:760px){.account-page{padding:37px var(--pad) 52px}.account-preview{padding:19px}.account-tabs{gap:3px}.account-tabs [role="tab"]{font-size:11px;padding:10px 11px}.category-explore>div{gap:9px 15px}.category-explore a{font-size:11px}}
