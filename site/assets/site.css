@@ -274,3 +274,17 @@ h1,h2,h3,.footer-title,.youtube-feature h2{font-family:"DM Sans",Arial,sans-seri
 }
 
 .sitemap-page{min-height:100vh;padding:clamp(30px,6vw,75px);background:var(--paper);color:var(--ink);font-family:"DM Sans",sans-serif;max-width:850px;margin:auto}.sitemap-page h1{font:700 clamp(34px,5vw,52px)/1.2 "DM Sans",sans-serif;margin:32px 0 8px}.sitemap-page p{color:#5d625e}.sitemap-page nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 24px;margin:30px 0 60px}.sitemap-page nav a{padding:13px 0;border-bottom:1px solid var(--line)}.sitemap-back{font-weight:700}.sitemap-page small{font-size:11px}@media(max-width:500px){.sitemap-page nav{grid-template-columns:1fr;gap:0}.sitemap-page nav a{padding:12px 0}}
+
+.merch-page{width:min(100%,1100px);min-height:65vh;margin:0 auto;padding:clamp(45px,6vw,85px) var(--pad);background:var(--paper);color:var(--ink)}
+.merch-page__topline{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#58665c}
+.merch-page h1{font:700 clamp(37px,4.5vw,58px)/1.12 "DM Sans",Arial,sans-serif;letter-spacing:-.035em;text-transform:none;margin:16px 0 15px}
+.merch-page>p{font-size:15px;max-width:520px;line-height:1.6;margin:0 0 35px}
+.merch-page__status{padding:24px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center}
+.merch-page__status[hidden]{display:none}
+.merch-page__status strong{font-size:14px}.merch-page__status span{font-size:13px;color:#58665c}
+.merch-page__home{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;margin-top:34px;padding:10px 0}
+.merch-page #live-products h2{font:700 clamp(22px,3vw,34px)/1.2 "DM Sans",sans-serif;text-transform:none;margin:24px 0}
+.merch-page .catalog-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}
+@media(max-width:560px){.merch-page{padding:42px var(--pad) 55px;min-height:60vh}.merch-page>p{margin-bottom:25px}.merch-page__status{padding:20px 0}}
+.external-link{display:inline-flex;align-items:center;gap:7px}
+.external-link .external-icon{order:10;margin-left:1px}

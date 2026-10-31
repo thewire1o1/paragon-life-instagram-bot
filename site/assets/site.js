@@ -104,11 +104,11 @@ function renderCatalog(products){
   item.append(make('h4',p.title));
   const select=document.createElement('select');select.setAttribute('aria-label','Choose '+p.title+' option');
   variants.forEach(v=>{const opt=document.createElement('option');opt.value=v.id;opt.textContent=v.title+' · '+amount(v.price,v.currency);select.append(opt)});
-  const add=make('button','Add to bag ↗');add.type='button';
+  const add=make('button','Add to bag');add.type='button';
   add.addEventListener('click',()=>addItem(select.value,1,add));
   item.append(select,add);shopGrid.append(item);
  }
- if(shopGrid.children.length){liveProducts.hidden=false}
+ if(shopGrid.children.length){liveProducts.hidden=false;const pending=document.getElementById('collection-pending');if(pending)pending.hidden=true}
 }
 updateCart();
 cartOpen.addEventListener('click',()=>setCartOpen(true));
