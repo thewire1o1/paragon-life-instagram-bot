@@ -604,3 +604,14 @@ body.menu-open .life-message-bubble,body.cart-active .life-message-bubble{displa
  .head-inner .logo-words{font-size:20px!important}
  .head-inner>.life-account-link{font-size:10px}
 }
+
+
+@media(max-width:340px){
+ .head-inner{padding-left:6px;padding-right:6px;gap:3px}
+ .head-inner .logo-emblem{width:36px;height:36px;flex-basis:36px}
+ .head-inner .logo-words{font-size:18px!important}
+ .head-inner>.life-account-link{font-size:0}
+ .head-inner>.life-account-link::before{content:"Acct";font:600 10px/1.35 var(--display)}
+ .head-inner>.cart-open{min-height:34px;padding:6px 7px;font-size:10px!important}
+ .head-inner>.menu-btn{width:34px;min-width:34px;height:34px}
+}
