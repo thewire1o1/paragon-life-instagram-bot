@@ -10,7 +10,7 @@ import {readFileSync,existsSync} from 'node:fs';
 const root=readFileSync(new URL('../../app/root.jsx',import.meta.url),'utf8');
 const landing=readFileSync(new URL('../../app/routes/_index.jsx',import.meta.url),'utf8');
 test('Hydrogen ships authentic Life favicon and Coffee mark',()=>{
- assert.ok(existsSync(new URL('../../public/assets/favicon.webp',import.meta.url)));
+ assert.ok(existsSync(new URL('../../public/assets/paragon-life-logo.png',import.meta.url)));
  assert.match(root,/href:'\/assets\/favicon.webp'/);
  assert.match(root,/coffee\.digitalparagon\.com\/assets\/brand\/paragon-monogram.webp/);
  assert.doesNotMatch(root,/function CoffeeMark\(\)\{return <svg/);
@@ -41,4 +41,10 @@ test('Hydrogen retains its independent Merch shop and internal links have intern
 test('Hydrogen removes all boxed external icons and retains branded Instagram',()=>{
  assert.doesNotMatch(root,/ExternalIcon/);
  assert.match(root,/paragon-life-insta/);
+});
+
+test('Hydrogen includes the same design stylesheet and transparent Life logo',()=>{
+ assert.match(root,/refinement\.css/);
+ assert.match(root,/paragon-life-logo\.png/);
+ assert.ok(existsSync(new URL('../../public/assets/tech-workshop.jpg',import.meta.url)));
 });

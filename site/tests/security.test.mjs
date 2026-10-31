@@ -29,7 +29,7 @@ const root=new URL('../',import.meta.url);
 const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
 const css=readFileSync(new URL('../assets/site.css',import.meta.url),'utf8');
 test('Paragon Life original favicon is shipped and linked',()=>{
- assert.ok(existsSync(new URL('../assets/favicon.webp',import.meta.url)));
+ assert.ok(existsSync(new URL('../assets/paragon-life-logo.png',import.meta.url)));
  assert.match(html,/<link rel="icon"[^>]+href="\/assets\/favicon.webp"/);
 });
 test('store navigation uses a visible shared shopping bag and preserves Instagram in footer',()=>{
@@ -77,4 +77,16 @@ test('no boxed external-link marks survive; colored Instagram and YouTube marks 
  pages.forEach(page=>assert.doesNotMatch(page,/class="external-icon"|↗/));
  assert.match(html,/class="social-icon"/);
  assert.match(css,/#FF0033/);
+});
+
+test('Paragon Life design system has authentic asset paths, photo instead of drawn CAD and no duplicate footer badges',()=>{
+ const design=readFileSync(new URL('../assets/refinement.css',import.meta.url),'utf8');
+ assert.match(design,/--blue:#315c7e/);
+ assert.match(design,/font-family:var\(--display\)/);
+ assert.match(html,/src="\/assets\/paragon-life-logo.png"/);
+ assert.match(html,/src="\/assets\/tech-workshop.jpg"/);
+ assert.doesNotMatch(html,/CAD style technical illustration/);
+ assert.doesNotMatch(html,/<div class="footer-title"><img/);
+ assert.doesNotMatch(html,/<a class="footer-credit[^>]*><img/);
+ assert.ok(existsSync(new URL('../assets/tech-workshop.jpg',import.meta.url)));
 });
