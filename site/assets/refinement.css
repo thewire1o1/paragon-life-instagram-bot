@@ -355,3 +355,95 @@ nav.main a.nav-merch:hover{color:#fff;background:var(--blue);border-color:var(--
 
 /* The merchandise shortcut stays accessible in the closed header, but never changes the original open hamburger-menu layout. */
 @media(max-width:920px){body.menu-open .header .merch-header-ribbon{display:none!important}}
+
+
+/* Paragon Life categories, updates and support */
+.head-inner > .menu-btn{background:var(--blue-deep);color:#f4f1ed;border-color:var(--blue-deep);transition:background .18s,border-color .18s}
+.head-inner > .menu-btn:hover,.head-inner > .menu-btn:focus-visible{background:var(--blue);border-color:var(--blue)}
+.head-inner > .menu-btn.is-open{background:var(--blue-deep);color:#fff}
+.shop-category-grid{max-width:1510px;margin:0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.shop-category-card{display:block;position:relative;min-height:clamp(184px,18vw,266px);overflow:hidden;color:#f7f8f8!important;background:#17252e;border:1px solid #435766;isolation:isolate}
+.shop-category-card:focus-visible{outline:3px solid var(--blue-soft);outline-offset:2px}
+.shop-category-card:hover{border-color:#8aa7be}
+.shop-category-photo{position:absolute;inset:0;display:block;aspect-ratio:auto!important;transition:transform .28s ease;filter:saturate(.9);background-size:cover;background-position:center}
+.shop-category-card:hover .shop-category-photo{transform:scale(1.055)}
+.shop-category-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#061119ec 0%,#0c1827b8 34%,#06172510 88%)}
+.shop-cat--apparel .shop-category-photo,.shop-cat--accessories .shop-category-photo,.shop-cat--limited .shop-category-photo{background-size:400% 100%}
+.shop-cat--auto .shop-category-photo{background-image:url('/assets/hero-desert.jpg');background-position:58% center}
+.shop-cat--tech .shop-category-photo{background-image:url('/assets/tech-workshop.jpg');background-position:40% center}
+.shop-cat--garage .shop-category-photo{background-image:url('/assets/hero-desert.jpg');background-position:12% center}
+.shop-cat--3d .shop-category-photo{background-image:url('/assets/tech-workshop.jpg');background-position:85% center}
+.shop-cat--all .shop-category-photo{background:radial-gradient(ellipse at 30% 20%,#315c7e,#0c161c 82%)}
+.shop-cat--all .shop-category-photo:before{content:"P";position:absolute;inset:0;display:grid;place-items:center;font:italic 700 120px/1 var(--wordmark);opacity:.15;color:#f3f5f6}
+.shop-category-content{position:absolute;z-index:2;inset:auto 0 0;display:flex;flex-direction:column;align-items:flex-start;gap:5px;padding:clamp(13px,2vw,23px);color:#f4f1ed}
+.shop-category-content strong{font:600 clamp(17px,1.85vw,25px)/1.13 var(--display);letter-spacing:-.03em}
+.shop-category-content small{font:500 11px/1.5 var(--body);color:#d6e0e5}
+.shop-category-arrow{position:absolute;right:17px;bottom:18px;font:500 21px/1 var(--body);color:#b9d0dc}
+.merch-feature .shop-category-grid{margin-top:0}
+.merch-feature .merch-feature-head p{max-width:720px}
+.merch-feature .merch-feature-foot{max-width:1510px}
+#shop-directory{margin:34px 0 40px}
+#shop-directory>.eyebrow{margin-bottom:18px;color:var(--blue)}
+#shop-directory .shop-category-card{min-height:190px}
+.shop-category-detail{padding:28px 0 37px;border-top:1px solid var(--line);scroll-margin-top:125px}
+.shop-category-detail h2{font:600 clamp(26px,3.4vw,38px)/1.15 var(--display);letter-spacing:-.035em;margin:10px 0}
+.shop-category-detail p{max-width:790px;font:400 13px/1.7 var(--body);color:#52616c;margin:0 0 19px}
+.shop-category-detail .eyebrow{color:var(--blue)}
+.shop-category-detail .merch-item{color:#edf3f4}
+.shop-category-detail .merch-feature-grid{max-width:none;margin-top:24px}
+.shop-category-detail--information{display:flex;gap:18px;align-items:center;justify-content:space-between}
+.shop-category-inquiry{flex:none;font:700 12px/1.3 var(--body);color:var(--blue);border-bottom:1px solid currentColor;padding:8px 0}
+.shop-subcategory-list{font-weight:700!important;color:#315c7e!important}
+.life-updates{padding:clamp(46px,5vw,78px) var(--pad);background:#1b3342;color:#edf3f5}
+.life-updates-inner{max-width:1430px;margin:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:clamp(25px,5vw,70px)}
+.life-updates .eyebrow{color:#a8c4d5}
+.life-updates h2{font:600 clamp(31px,4vw,51px)/1.13 var(--display);letter-spacing:-.035em;margin:12px 0}
+.life-updates p{font:400 14px/1.6 var(--body);color:#c5d4db;max-width:560px;margin:0}
+.life-updates-form{min-width:0}
+.life-updates-form>label:first-child{display:block;font:700 11px/1.5 var(--body);letter-spacing:.07em;margin-bottom:8px}
+.life-updates-entry{display:flex;gap:8px}
+.life-updates-entry input{min-width:0;flex:1;border:1px solid #8397a4;border-radius:0;background:#f2f2ef;color:#152631;padding:14px;font:500 14px/1.3 var(--body)}
+.life-updates-entry input:focus-visible{outline:3px solid var(--blue-soft);outline-offset:2px}
+.life-updates-entry button{flex:none;border:1px solid #9fb8c7;background:transparent;color:#f4f1ed;font-family:var(--body);cursor:pointer}
+.life-updates-entry button:hover{background:#375773}
+.life-updates-entry button:disabled{opacity:.6;cursor:wait}
+.life-updates-consent{display:flex;gap:11px;align-items:flex-start;margin-top:15px;font:500 11px/1.55 var(--body);color:#d8e1e7}
+.life-updates-consent input{width:16px;height:16px;margin:0;accent-color:var(--blue-soft);flex:none}
+.life-updates-consent a{text-decoration:underline;text-underline-offset:3px}
+.life-updates-trap{position:absolute!important;width:1px;height:1px;opacity:0;left:-9999px;pointer-events:none}
+.life-updates-response{min-height:18px;font:600 12px/1.4 var(--body)!important;margin-top:11px!important;color:#f4f1ed!important}
+.footer-help-links{max-width:1510px;margin:0 auto;padding:21px 0 25px;border-top:1px solid #42535d;display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+.footer-help-links>strong{font:700 10px/1.5 var(--body);letter-spacing:.13em;text-transform:uppercase;color:#9ab2c1;white-space:nowrap}
+.footer-help-links>div{display:flex;gap:12px 25px;flex-wrap:wrap;justify-content:flex-end}
+.footer-help-links a{font:500 12px/1.5 var(--body);color:#dce4e7;white-space:nowrap}
+.footer-help-links a:hover{text-decoration:underline;text-underline-offset:3px}
+.life-message-bubble{position:fixed;right:22px;bottom:max(20px,env(safe-area-inset-bottom));z-index:20;display:flex;align-items:center;justify-content:center;gap:13px;padding:14px 20px;border:1px solid #9ebace;border-radius:99px;background:#0c161cf2;color:#eaf2f5!important;box-shadow:0 10px 26px #0005;font:600 13px/1.25 var(--body)}
+.life-message-bubble svg{width:22px;height:22px;flex:none}
+.life-message-bubble:hover,.life-message-bubble:focus-visible{background:var(--blue-deep);border-color:#bed3df}
+body.menu-open .life-message-bubble,body.cart-active .life-message-bubble{display:none}
+@media(max-width:1000px){.shop-category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.shop-category-card{min-height:clamp(174px,26vw,255px)}}
+@media(max-width:760px){
+.shop-category-grid{gap:10px}
+.shop-category-card,#shop-directory .shop-category-card{min-height:180px}
+.shop-category-content{padding:14px 12px 15px}
+.shop-category-content strong{font-size:clamp(16px,4.5vw,22px);padding-right:8px}
+.shop-category-content small{font-size:10px;max-width:95%;padding-right:10px}
+.shop-category-arrow{right:11px;bottom:10px;font-size:17px}
+.shop-category-detail--information{display:block}
+.shop-category-inquiry{display:inline-flex;margin-top:5px}
+.life-updates-inner{grid-template-columns:1fr;gap:27px}
+.life-updates{padding:46px var(--pad)}
+.life-updates h2{font-size:36px}
+.life-updates-entry{flex-wrap:wrap}
+.life-updates-entry input{flex:1 1 200px;min-height:46px}
+.life-updates-entry button{min-height:46px;padding:12px 17px}
+.footer-help-links{display:block;padding:22px 0}
+.footer-help-links>div{justify-content:flex-start;margin-top:17px;gap:13px 22px}
+.life-message-bubble{right:13px;bottom:max(13px,env(safe-area-inset-bottom));padding:12px 16px;gap:10px;font-size:12px}
+}
+@media(max-width:370px){
+.shop-category-card,#shop-directory .shop-category-card{min-height:165px}
+.shop-category-content strong{font-size:15px}
+.shop-category-content small{font-size:9px}
+.life-updates-entry button{width:100%;justify-content:space-between}
+}
