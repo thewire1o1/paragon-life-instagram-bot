@@ -352,3 +352,6 @@ nav.main a.nav-merch:hover{color:#fff;background:var(--blue);border-color:var(--
  .merch-header-ribbon .merch-ribbon-label{font-size:11px}
  .merch-header-ribbon .merch-ribbon-action{font-size:10px}
 }
+
+/* The merchandise shortcut stays accessible in the closed header, but never changes the original open hamburger-menu layout. */
+@media(max-width:920px){body.menu-open .header .merch-header-ribbon{display:none!important}}
