@@ -11,7 +11,7 @@ const root=readFileSync(new URL('../../app/root.jsx',import.meta.url),'utf8');
 const landing=readFileSync(new URL('../../app/routes/_index.jsx',import.meta.url),'utf8');
 test('Hydrogen ships authentic Life favicon and Coffee mark',()=>{
  assert.ok(existsSync(new URL('../../public/assets/paragon-life-logo.png',import.meta.url)));
- assert.match(root,/href:'\/assets\/favicon.webp'/);
+ assert.match(root,/href:'\/assets\/paragon-life-logo.png'/);
  assert.match(root,/coffee\.digitalparagon\.com\/assets\/brand\/paragon-monogram.webp/);
  assert.doesNotMatch(root,/function CoffeeMark\(\)\{return <svg/);
 });

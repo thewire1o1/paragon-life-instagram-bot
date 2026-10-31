@@ -30,7 +30,7 @@ const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
 const css=readFileSync(new URL('../assets/site.css',import.meta.url),'utf8');
 test('Paragon Life original favicon is shipped and linked',()=>{
  assert.ok(existsSync(new URL('../assets/paragon-life-logo.png',import.meta.url)));
- assert.match(html,/<link rel="icon"[^>]+href="\/assets\/favicon.webp"/);
+ assert.match(html,/<link rel="icon"[^>]+href="\/assets\/paragon-life-logo.png"/);
 });
 test('store navigation uses a visible shared shopping bag and preserves Instagram in footer',()=>{
  assert.match(html,/<button[^>]+id="cart-open"[^>]*>Bag \(<span id="cart-count">0<\/span>\)<\/button>/);
