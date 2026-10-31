@@ -579,3 +579,12 @@ body.menu-open .life-message-bubble,body.cart-active .life-message-bubble{displa
 .featured .featured-copy{z-index:2}
 .featured img[src*="cayman-45-poster"]{object-fit:cover;object-position:center 45%}
 @media(max-width:760px){.account-page{padding:37px var(--pad) 52px}.account-preview{padding:19px}.account-tabs{gap:3px}.account-tabs [role="tab"]{font-size:11px;padding:10px 11px}.category-explore>div{gap:9px 15px}.category-explore a{font-size:11px}}
+
+/* Portrait 4.5 poster uses the supplied design without cropping its lettering or car. */
+.projects .featured:has(img[data-image*="cayman-45-poster"]){min-height:0;background:#06111c}
+.projects .featured:has(img[data-image*="cayman-45-poster"]):after{display:none}
+.projects .featured img[data-image*="cayman-45-poster"]{position:relative;display:block;width:100%;height:auto;max-height:690px;object-fit:contain;object-position:center;background:#06111c}
+.projects .featured:has(img[data-image*="cayman-45-poster"]) .featured-copy{position:relative;left:auto;right:auto;bottom:auto;padding:22px 28px 25px;background:#102330}
+.projects .featured:has(img[data-image*="cayman-45-poster"]) .featured-copy h3{font-size:clamp(24px,2.5vw,34px);margin:10px 0}
+.projects .featured:has(img[data-image*="cayman-45-poster"]) .featured-copy p{margin-bottom:0}
+@media(max-width:760px){.projects .featured:has(img[data-image*="cayman-45-poster"]) .featured-copy{padding:20px 22px 23px}}
