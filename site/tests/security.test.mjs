@@ -90,3 +90,14 @@ test('Paragon Life design system has authentic asset paths, photo instead of dra
  assert.doesNotMatch(html,/<a class="footer-credit[^>]*><img/);
  assert.ok(existsSync(new URL('../assets/tech-workshop.jpg',import.meta.url)));
 });
+
+test('style system uses the brand wordmark typeface and distinct mobile sitemap row',()=>{
+ const css=readFileSync(new URL('../assets/refinement.css',import.meta.url),'utf8');
+ assert.match(css,/--wordmark:"Exo 2"/);
+ assert.match(css,/--display:"Space Grotesk"/);
+ assert.match(css,/\.footer-nav \.footer-children a\.external-link/);
+ assert.match(css,/\.footer-nav>div:last-child>a:last-of-type/);
+ assert.match(css,/grid-column:1\/-1/);
+ assert.match(css,/\.footer-nav \.digital-paragon-mark/);
+ assert.match(html,/href="\/sitemap.html">Sitemap/);
+});

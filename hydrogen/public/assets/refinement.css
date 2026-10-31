@@ -1,6 +1,6 @@
 
 /* Paragon Life. One cohesive visual system across desktop and mobile. */
-:root{--blue:#315c7e;--blue-soft:#8aa7be;--blue-deep:#243e52;--paper:#d8d3cb;--ink:#17232b;--line:#b8b3ac;--dark:#0c161c;--soft:#d2d5d2;--display:"Saira",sans-serif;--body:"Manrope",Arial,sans-serif;}
+:root{--blue:#315c7e;--blue-soft:#8aa7be;--blue-deep:#243e52;--paper:#d8d3cb;--ink:#17232b;--line:#b8b3ac;--dark:#0c161c;--soft:#d2d5d2;--display:"Space Grotesk",Arial,sans-serif;--wordmark:"Exo 2",Arial,sans-serif;--body:"Manrope",Arial,sans-serif;}
 body{font-family:var(--body);color:var(--ink);background:var(--paper);}
 h1,h2,h3,.hero-content h1,.section h2,.section-heading h2,.youtube-feature h2,.pillar h3,.tech-copy h2,.note h3,.featured h3,.merch-page h1{font-family:var(--display);font-weight:600;text-transform:none;letter-spacing:-.035em;line-height:1.13;}
 h1{font-size:clamp(38px,4.5vw,60px)}
@@ -97,4 +97,74 @@ nav.main a:hover,footer a:hover{color:var(--blue-soft);}
  .logo-emblem{width:44px;height:44px;}
  .hero-content h1{font-size:clamp(37px,10vw,48px)}
  .mobile-nav__main>a,.mobile-nav__disclosure>summary{font-size:16px;}
+}
+
+/* Paragon Life brand identity: motorsport-leaning wordmark + editorial display.
+   Keep this final layer authoritative instead of reviving previous template fonts. */
+.logo,.logo-words,.footer-title,.footer-nav .footer-parent-brand,.brand{
+ font-family:var(--wordmark);font-style:italic;font-weight:700;letter-spacing:-.03em;
+}
+.logo-words{font-size:clamp(20px,2.15vw,28px);line-height:1.04;white-space:nowrap}
+.logo-words span{font-family:inherit;font-style:inherit;font-weight:inherit}
+.logo-words small{font:600 9px/1.65 var(--body);font-style:normal;letter-spacing:.13em}
+.footer-title{font-size:clamp(23px,2.35vw,33px);font-style:italic;line-height:1.15}
+.footer-title small{font-family:var(--body);font-style:normal;font-weight:500;letter-spacing:0}
+.footer-nav .footer-parent-brand{font-size:15px;font-style:italic;letter-spacing:-.015em;line-height:1.28}
+.footer-nav strong{font-family:var(--display);font-size:11px;letter-spacing:.10em;font-weight:600}
+.mobile-nav__main>a,.mobile-nav__disclosure>summary{
+ font-family:var(--wordmark);font-size:17px;font-weight:600;font-style:normal;letter-spacing:-.015em;
+ border-color:#b3b2ae;min-height:57px;
+}
+.mobile-nav__children a{font-family:var(--display);font-size:14px;font-weight:500}
+.mobile-nav__utility a{font-family:var(--display);font-size:14px;font-weight:500}
+.section h2,.section-heading h2,.youtube-feature h2,.tech-copy h2,
+.hero-content h1,.pillar h3,.featured h3,.project-list h3,.note h3,.about h2{
+ font-family:var(--display);font-style:normal;letter-spacing:-.055em;font-weight:600;
+}
+.hero-content h1{font-size:clamp(39px,5.3vw,66px)}
+.section h2,.section-heading h2{font-size:clamp(29px,3.55vw,46px)}
+.pillar h3{font-size:clamp(25px,3vw,38px)}
+/* Treat each brand as its own link row. Never let adjacent brands collapse side by side. */
+.footer-nav>div:nth-child(2){display:flex;flex-direction:column;align-items:stretch}
+.footer-nav .footer-parent-brand{display:flex;width:max-content;max-width:100%;margin:0 0 20px;gap:12px}
+.footer-nav .footer-children{
+ display:flex;flex-direction:column;align-items:stretch;gap:19px;width:100%;border:0;margin:0;padding:0;
+}
+.footer-nav .footer-children a.external-link{
+ display:flex;flex-direction:row;flex-wrap:nowrap;align-items:center;justify-content:flex-start;
+ width:max-content;max-width:100%;margin:0!important;gap:12px;
+}
+.footer-nav .footer-children img{display:block;flex:none;object-fit:contain}
+.footer-nav .life-brand-mark{width:24px!important;height:24px!important;flex-basis:24px!important}
+.footer-nav .coffee-brand-mark{width:24px!important;height:24px!important;flex-basis:24px!important}
+.footer-nav .digital-paragon-mark{width:28px!important;height:28px!important;flex-basis:28px!important;margin-left:-2px;margin-right:-2px}
+.footer-nav .youtube-icon{width:25px!important;height:19px!important;max-width:25px!important;max-height:19px!important;flex:0 0 25px!important}
+.footer-nav .social-icon{width:22px!important;height:22px!important;max-width:22px!important;flex:0 0 22px!important}
+/* Desktop Connect links occupy individual, nonwrapping rows. */
+.footer-nav>div:last-child{display:flex;flex-direction:column;align-items:flex-start;gap:17px}
+.footer-nav>div:last-child>strong{margin:0 0 3px}
+.footer-nav>div:last-child>a{display:flex;align-items:center;gap:10px;margin:0!important;white-space:nowrap;width:max-content}
+@media(max-width:760px){
+ .footer-nav>div:nth-child(2){display:flex;flex-direction:column}
+ .footer-nav>div:last-child{
+  grid-column:1/-1;display:grid;grid-template-columns:max-content max-content;
+  justify-content:start;align-items:center;column-gap:clamp(20px,5vw,40px);row-gap:17px;
+ }
+ .footer-nav>div:last-child>strong{grid-column:1/-1;margin:0}
+ .footer-nav>div:last-child>a{margin:0!important;align-self:center}
+ .footer-nav>div:last-child>a:last-of-type{
+  grid-column:1/-1;display:block;justify-self:start;align-self:start;
+  margin-top:0!important;padding-top:16px;border-top:1px solid #344650;
+  min-width:min(100%,280px);width:100%;
+ }
+ .footer-nav .footer-children{gap:17px}
+ .footer-nav .footer-parent-brand{margin:0 0 17px}
+}
+@media(max-width:440px){
+ .logo-words{font-size:clamp(18px,5.3vw,21px);letter-spacing:-.038em}
+ .logo-words small{font-size:8px;letter-spacing:.12em}
+ .footer-title{font-size:27px}
+ .footer-nav .footer-parent-brand{font-size:13px}
+ .footer-nav .footer-children a.external-link{gap:8px}
+ .mobile-nav__main>a,.mobile-nav__disclosure>summary{font-size:17px}
 }

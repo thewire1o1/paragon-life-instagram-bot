@@ -48,3 +48,10 @@ test('Hydrogen includes the same design stylesheet and transparent Life logo',()
  assert.match(root,/paragon-life-logo\.png/);
  assert.ok(existsSync(new URL('../../public/assets/tech-workshop.jpg',import.meta.url)));
 });
+
+test('Hydrogen shares distinct Life wordmark and headline typography',()=>{
+ const css=readFileSync(new URL('../../public/assets/refinement.css',import.meta.url),'utf8');
+ assert.match(css,/--wordmark:"Exo 2"/);
+ assert.match(css,/--display:"Space Grotesk"/);
+ assert.match(root,/family=Exo\+2/);
+});

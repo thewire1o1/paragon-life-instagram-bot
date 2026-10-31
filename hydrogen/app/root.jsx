@@ -8,7 +8,7 @@ export function links(){return [
 {rel:'icon',type:'image/png',sizes:'256x256',href:'/assets/paragon-life-logo.png'},
 {rel:'preconnect',href:'https://fonts.googleapis.com'},
 {rel:'preconnect',href:'https://fonts.gstatic.com',crossOrigin:'anonymous'},
-{rel:'stylesheet',href:'https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Saira:wght@400;500;600;700&display=swap'},
+{rel:'stylesheet',href:'https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap'},
 {rel:'stylesheet',href:'/assets/site.css'},
 {rel:'stylesheet',href:'/assets/refinement.css'},
 ];}
