@@ -297,8 +297,3 @@ width:22px!important;height:22px!important;min-width:22px!important;max-width:22
 .youtube-feature__tag .youtube-icon,.youtube-feature__button .youtube-icon{color:#FF0033!important}
 .footer-nav .external-link,.mobile-nav__utility .external-link,.mobile-nav__children .external-link{display:inline-flex;align-items:center;gap:9px}
 .external-icon{display:none!important}
-
-/* Temporary visual halo suppression for the currently deployed emblem.
-   Replace this display mask when the user's clean transparent master file is accessible. */
-.logo-emblem,.life-brand-mark{clip-path:circle(39% at 50% 50%);transform:scale(1.12);object-fit:contain}
-.footer-title .life-brand-mark{transform:scale(1.12)}
