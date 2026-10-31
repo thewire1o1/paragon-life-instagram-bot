@@ -55,3 +55,9 @@ test('Hydrogen shares distinct Life wordmark and headline typography',()=>{
  assert.match(css,/--display:"Space Grotesk"/);
  assert.match(root,/family=Exo\+2/);
 });
+
+test('Hydrogen metadata and primary brand copy agree with social Life Perfected identity',()=>{
+ assert.match(landing,/Paragon Life \| Life Perfected/);
+ assert.match(landing,/Life Perfected\. Cars, bikes/);
+ assert.match(root,/Life Perfected/);
+});

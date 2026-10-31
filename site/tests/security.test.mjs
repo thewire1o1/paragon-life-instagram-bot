@@ -43,7 +43,7 @@ test('actual Coffee brand mark and footer parent hierarchy remain consistent',()
  const matches=[...html.matchAll(/class="coffee-brand-mark"/g)];
  assert.ok(matches.length>=3);
  assert.doesNotMatch(html,/<svg class="coffee-brand-mark"/);
- assert.match(html,/class="footer-parent-brand"[^>]*>[\s\S]*?Paragon Life<\/a>/);
+ assert.doesNotMatch(html,/class="footer-parent-brand"/);
  assert.match(html,/class="footer-children"/);
  assert.match(css,/\.external-link/);
 });
@@ -62,7 +62,7 @@ test('homepage does not contain the redundant merchandise or Coffee promo sectio
  assert.match(html,/href="https:\/\/coffee\.digitalparagon\.com\//);
 });
 
-test('presentation has no AI-style project numbering, parent label, or California footer filler',()=>{assert.doesNotMatch(html,/The world of Paragon \/ 01|Automotive \/ 02|Technology \/ 03|Parent brand|<span>California<\/span>|Project \/ 0[1-9]/i);assert.match(html,/Our brands/);assert.match(html,/class="life-brand-mark"/);assert.match(html,/class="digital-paragon-mark"/);assert.match(html,/class="social-icon"/);assert.match(html,/href="\/sitemap.html">Sitemap/);});
+test('presentation has no AI-style project numbering, parent label, or California footer filler',()=>{assert.doesNotMatch(html,/The world of Paragon \/ 01|Automotive \/ 02|Technology \/ 03|Parent brand|<span>California<\/span>|Project \/ 0[1-9]/i);assert.match(html,/Our brands/);assert.doesNotMatch(html,/class="life-brand-mark"/);assert.match(html,/class="digital-paragon-mark"/);assert.match(html,/class="social-icon"/);assert.match(html,/href="\/sitemap.html">Sitemap/);});
 
 test('Paragon Merch is a real destination in all navigation without restoring the homepage promo',()=>{
  const page=readFileSync(new URL('../shop/index.html',import.meta.url),'utf8');
@@ -100,4 +100,18 @@ test('style system uses the brand wordmark typeface and distinct mobile sitemap 
  assert.match(css,/grid-column:1\/-1/);
  assert.match(css,/\.footer-nav \.digital-paragon-mark/);
  assert.match(html,/href="\/sitemap.html">Sitemap/);
+});
+
+test('site identity matches Life Perfected and footer lists other Paragon brands only',()=>{
+ const merch=readFileSync(new URL('../shop/index.html',import.meta.url),'utf8');
+ for(const page of [html,merch]){
+  assert.match(page,/<small>LIFE PERFECTED<\/small>/);
+  assert.match(page,/<strong>Our brands<\/strong><div class="footer-children">/);
+  assert.doesNotMatch(page,/<a class="footer-parent-brand"/);
+  assert.match(page,/Paragon Coffee/);
+  assert.match(page,/Digital Paragon/);
+ }
+ assert.match(html,/<title>Paragon Life \| Life Perfected<\/title>/);
+ assert.match(html,/Real projects\. Real adventures\./);
+ assert.match(html,/<div class="eyebrow">Life Perfected<\/div>/);
 });
