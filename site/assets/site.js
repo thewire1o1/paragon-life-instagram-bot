@@ -108,7 +108,7 @@ function renderCatalog(products){
   add.addEventListener('click',()=>addItem(select.value,1,add));
   item.append(select,add);shopGrid.append(item);
  }
- if(shopGrid.children.length){liveProducts.hidden=false;const pending=document.getElementById('collection-pending');if(pending)pending.hidden=true;const preview=document.getElementById('shop-preview');if(preview)preview.hidden=true}
+ if(shopGrid.children.length){liveProducts.hidden=false;const pending=document.getElementById('collection-pending');if(pending)pending.hidden=true}
 }
 
 function renderHomepageMerch(products){
@@ -145,3 +145,23 @@ checkoutButton.addEventListener('click',async()=>{
   if(Array.isArray(products)){renderHomepageMerch(products);if(shopGrid&&liveProducts){renderCatalog(products);if(!liveProducts.hidden){cart=await requestShop('cart');updateCart()}}}
  }catch{/* Keep commerce hidden until the independent Life store is configured. */}
 })();
+/* Email list opt-in: show success only after server confirms private storage. */
+document.querySelectorAll('[data-newsletter-form]').forEach(form=>{
+ const status=form.querySelector('[data-newsletter-status]'),button=form.querySelector('button[type=submit]'),startedAt=Date.now();
+ form.addEventListener('submit',async event=>{
+  event.preventDefault();
+  status.textContent='';
+  const email=form.elements.email.value.trim();
+  if(!form.elements.email.validity.valid||!email){status.textContent='Enter a valid email address.';return}
+  if(!form.elements.consent.checked){status.textContent='Please agree to receive email updates.';return}
+  button.disabled=true;button.setAttribute('aria-busy','true');
+  try{
+   const response=await fetch('/api/subscribe',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,consent:true,website:form.elements.website.value,startedAt})});
+   const result=await response.json();
+   if(!response.ok||!result.ok)throw new Error(result.error||'Unable to subscribe right now.');
+   status.textContent=result.message||"You're on the list.";
+   form.reset();
+  }catch(error){status.textContent=error.message||'Please try again.'}
+  finally{button.disabled=false;button.removeAttribute('aria-busy')}
+ });
+});
