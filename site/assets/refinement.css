@@ -615,3 +615,55 @@ body.menu-open .life-message-bubble,body.cart-active .life-message-bubble{displa
  .head-inner>.cart-open{min-height:34px;padding:6px 7px;font-size:10px!important}
  .head-inner>.menu-btn{width:34px;min-width:34px;height:34px}
 }
+
+
+/* One compact Coffee-inspired menu across Paragon Life. */
+@media(max-width:1100px){
+ .mobile-nav,.mobile-nav.open{
+   background:#0b1116!important;color:#e6edf1!important;
+   border-top:1px solid #2b4150!important;box-shadow:0 12px 32px #0008;
+   padding:clamp(15px,3vw,24px) var(--pad) max(35px,env(safe-area-inset-bottom))!important;
+ }
+ .mobile-nav__main{max-width:1100px;margin:0 auto}
+ .mobile-nav__main>a,
+ .mobile-nav__group>.mobile-nav__disclosure>summary{
+   font:500 15px/1.35 var(--body)!important;letter-spacing:0!important;
+   font-style:normal!important;text-transform:none!important;color:#e7edf0!important;
+   min-height:50px!important;padding:12px 0!important;border-color:#30414c!important;
+ }
+ .mobile-nav__main>a{border-bottom:1px solid #30414c!important}
+ .mobile-nav__main>a:hover,.mobile-nav__group>.mobile-nav__disclosure>summary:hover{color:#b9d4e5!important}
+ .mobile-nav__group{display:block;border-top:1px solid #30414c;margin-top:15px;padding-top:8px}
+ .mobile-nav__group>.mobile-nav__disclosure{border-bottom:1px solid #30414c}
+ .mobile-nav__group>.mobile-nav__disclosure>summary{padding-right:35px!important}
+ .mobile-nav__disclosure>summary::after{color:#90b8d3!important;font:400 21px/1 var(--body)!important;right:4px}
+ .mobile-nav__children{padding:2px 0 14px 12px;gap:3px 12px}
+ .mobile-nav__children a{display:flex;align-items:center;min-height:36px;padding:7px 10px;
+    border:0!important;border-left:1px solid #324958!important;color:#c7d7e0!important;
+    font:500 12px/1.5 var(--body)!important;text-transform:none!important;
+    letter-spacing:0!important;overflow-wrap:anywhere}
+ .mobile-nav__children a:hover,.mobile-nav__children a:focus-visible{color:#fff!important}
+ .mobile-nav__social{grid-template-columns:1fr!important;gap:10px;padding:12px 0 16px 12px}
+ .mobile-nav__social>a{border:0!important;color:#e1eaf1!important;min-height:34px}
+ .mobile-nav__account-utilities{
+   display:flex;gap:24px;align-items:center;margin-top:21px;padding:20px 0 0;
+   border-top:1px solid #30414c
+ }
+ .mobile-nav__account-utilities>a,.mobile-nav__account-utilities>button{
+   appearance:none;background:none;border:0;border-bottom:1px solid transparent;
+   padding:8px 0 10px;color:#e7edf0;font:500 14px/1.4 var(--body);
+   cursor:pointer;text-transform:none;letter-spacing:0
+ }
+ .mobile-nav__account-utilities>a:hover,.mobile-nav__account-utilities>button:hover{
+   color:#aecbe0;border-bottom-color:#aecbe0
+ }
+ .mobile-nav a:focus-visible,.mobile-nav summary:focus-visible,.mobile-nav button:focus-visible{
+   outline:2px solid #8bb7d3;outline-offset:2px
+ }
+}
+@media(max-width:560px){
+ .mobile-nav,.mobile-nav.open{padding-left:var(--pad)!important;padding-right:var(--pad)!important}
+ .mobile-nav__children{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .mobile-nav__social{grid-template-columns:1fr}
+ .mobile-nav__main>a,.mobile-nav__group>.mobile-nav__disclosure>summary{min-height:49px!important}
+}
