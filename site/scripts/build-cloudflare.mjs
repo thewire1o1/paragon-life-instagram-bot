@@ -7,7 +7,8 @@ for(const f of ['index.html','404.html','sitemap.html','sitemap.xml','robots.txt
  await copyFile(join(process.cwd(),f),join(out,f));
 }
 await cp(join(process.cwd(),'assets'),join(out,'assets'),{recursive:true});
-await mkdir(join(out,'shop'),{recursive:true});
-await copyFile(join(process.cwd(),'shop/index.html'),join(out,'shop/index.html'));
+for(const folder of ['shop','faq','contact','shipping-returns','accessibility','privacy','terms']){
+ await cp(join(process.cwd(),folder),join(out,folder),{recursive:true});
+}
 await writeFile(join(out,'_routes.json'),JSON.stringify({version:1,include:['/api/*'],exclude:[]},null,2)+'\n');
 console.log('Cloudflare Pages static build ready:',out);
