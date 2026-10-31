@@ -167,3 +167,13 @@ document.querySelectorAll('[data-newsletter-form]').forEach(form=>{
   finally{button.disabled=false;button.removeAttribute('aria-busy')}
  });
 });
+
+
+/* Avoid covering footer links with the floating Instagram contact shortcut. */
+const lifeFooter=document.querySelector('footer.life-footer');
+if(lifeFooter&&'IntersectionObserver' in window){
+ const contactVisibility=new IntersectionObserver(entries=>{
+  document.body.classList.toggle('footer-in-view',entries.some(entry=>entry.isIntersecting));
+ },{threshold:0});
+ contactVisibility.observe(lifeFooter);
+}
