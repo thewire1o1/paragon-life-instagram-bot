@@ -462,3 +462,66 @@ body.menu-open .life-message-bubble,body.cart-active .life-message-bubble{displa
 .info-page-sections a{color:var(--blue);font-weight:700;text-decoration:underline;text-underline-offset:3px}
 .info-page-home{display:inline-flex;margin-top:30px;padding:10px 0;border-bottom:1px solid var(--blue);font:700 12px/1.4 var(--body);color:var(--blue)}
 @media(max-width:760px){.info-page{padding:40px var(--pad) 60px}.info-page-sections>section{padding:19px 0}}
+
+
+/* Paragon Life footer, matching Coffee's information hierarchy without changing other sections. */
+.footer.life-footer{background:#0b151c;color:#e8edee;padding:clamp(38px,5vw,65px) var(--pad) 25px}
+.life-footer-inner{max-width:1510px;margin:0 auto}
+.life-footer-top{padding-bottom:30px;border-bottom:1px solid #354852}
+.life-footer-identity{display:flex;align-items:center;gap:17px}
+.life-footer-mark{display:block;width:62px;height:62px;object-fit:contain;flex:0 0 62px}
+.life-footer-name{font:italic 700 clamp(24px,2.9vw,37px)/1.14 var(--wordmark);letter-spacing:-.02em;color:#edf2f5}
+.life-footer-name span{color:#edf2f5}
+.life-footer-name small{display:block;font:500 11px/1.55 var(--body);letter-spacing:.075em;color:#a9bdc9;margin-top:5px}
+.life-footer-social{margin-top:24px}
+.life-footer-social>strong,.life-footer-group>h3{display:block;font:700 11px/1.4 var(--body);letter-spacing:.13em;text-transform:uppercase;color:#93b0c2;margin:0}
+.life-footer-social-links{display:flex;align-items:center;flex-wrap:wrap;gap:clamp(15px,3.4vw,34px);margin-top:13px}
+.life-footer-social-links>a{display:inline-flex;align-items:center;gap:9px;color:#e8edee;text-decoration:none;font:500 13px/1.45 var(--body)}
+.life-footer-social-links>a svg{display:block;width:22px;height:22px;flex:0 0 22px}
+.life-footer-social-links>a .youtube-icon{width:28px;height:20px;flex-basis:28px}
+.life-footer-social-links>a:hover,.life-footer-group a:hover,.life-footer-credit:hover{color:#c2dcee;text-decoration:underline;text-underline-offset:3px}
+.life-footer-nav{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,.7fr) minmax(0,1fr) minmax(0,.95fr);gap:clamp(17px,3vw,50px);padding:31px 0 38px}
+.life-footer-group{min-width:0}
+.life-footer-group>h3{margin-bottom:16px;line-height:1.5}
+.life-footer-group a{color:#d4dfe5;text-decoration:none;font:500 12px/1.5 var(--body);min-width:0;overflow-wrap:break-word}
+.life-footer-shop-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:14px;row-gap:13px}
+.life-footer-link-stack{display:flex;flex-direction:column;align-items:flex-start;gap:13px}
+.life-footer-brand-links{display:flex;flex-direction:column;gap:15px}
+.life-footer-brand-links>a{display:inline-flex;align-items:center;gap:9px;white-space:nowrap}
+.life-footer-brand-links img{display:block;width:22px;height:22px;flex:0 0 22px;object-fit:contain}
+.life-footer-bottom{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;border-top:1px solid #354852;padding-top:20px;font:500 11px/1.6 var(--body);color:#a9b7c0}
+.life-footer-credit{display:inline-flex;align-items:center;gap:9px;font:500 11px/1.5 var(--body);color:#cbd6db;text-decoration:none}
+.life-footer-credit img{width:21px;height:21px;object-fit:contain;flex:0 0 21px}
+@media(max-width:950px){
+.life-footer-nav{grid-template-columns:repeat(2,minmax(0,1fr));gap:29px 24px}
+.life-footer-shop{grid-column:1/-1}
+.life-footer-shop-links{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:760px){
+.footer.life-footer{padding:35px var(--pad) 24px}
+.life-footer-top{padding-bottom:27px}
+.life-footer-identity{gap:12px}
+.life-footer-mark{width:53px;height:53px;flex-basis:53px}
+.life-footer-name{font-size:clamp(23px,6.5vw,31px)}
+.life-footer-name small{font-size:10px;letter-spacing:.035em}
+.life-footer-social{margin-top:24px}
+.life-footer-social-links{gap:12px 18px;margin-top:13px}
+.life-footer-social-links>a{font-size:12px;gap:7px}
+.life-footer-nav{grid-template-columns:repeat(2,minmax(0,1fr));gap:25px 22px;padding:29px 0 31px}
+.life-footer-shop{grid-column:1/-1}
+.life-footer-shop-links{grid-template-columns:repeat(3,minmax(0,1fr));gap:13px 12px}
+.life-footer-shop-links a{font-size:11.25px;line-height:1.45}
+.life-footer-brands{grid-column:1/-1}
+.life-footer-brand-links{flex-direction:row;flex-wrap:wrap;gap:14px 25px}
+.life-footer-group>h3{font-size:10.5px;margin-bottom:13px}
+.life-footer-group a{font-size:11.5px}
+.life-footer-link-stack{gap:12px}
+.life-footer-bottom{flex-direction:column;align-items:flex-start;gap:12px}
+}
+@media(max-width:360px){
+.life-footer-nav{column-gap:14px}
+.life-footer-shop-links{column-gap:9px}
+.life-footer-shop-links a{font-size:10.5px}
+.life-footer-social-links{gap:10px 15px}
+.life-footer-brand-links{gap:11px 20px}
+}
