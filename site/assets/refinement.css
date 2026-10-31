@@ -173,3 +173,27 @@ nav.main a:hover,footer a:hover{color:var(--blue-soft);}
 .footer-nav .life-brand-mark{width:24px!important;height:24px!important;max-width:24px!important;max-height:24px!important;flex:0 0 24px!important}
 .footer-nav .coffee-brand-mark{width:24px!important;height:24px!important;max-width:24px!important;max-height:24px!important;flex:0 0 24px!important}
 .footer-nav .digital-paragon-mark{width:32px!important;height:32px!important;max-width:32px!important;max-height:32px!important;flex:0 0 32px!important;margin:-4px -4px -4px -4px}
+
+/* Mobile hero height and navigation corrections, 2026-10-30 */
+.hero{min-height:0}
+.band{min-height:104px;display:flex;justify-content:center;align-items:center;align-content:center;gap:8px 13px;flex-wrap:wrap;padding:24px var(--pad);background:linear-gradient(90deg,rgba(9,18,24,.92),rgba(9,18,24,.6)),url('/assets/tech-workshop.jpg') center 52%/cover;color:#f0f3f4;letter-spacing:.15em;font-size:clamp(10px,1.1vw,14px);line-height:1.65}
+.band b{padding:0!important;color:#a7becb;font-size:16px;font-weight:400}
+.mobile-nav__social,.mobile-nav__brands{grid-template-columns:1fr!important}
+.mobile-nav__social a,.mobile-nav__brands a,.mobile-nav__social .social-pending{display:flex;align-items:center;gap:12px;font-family:var(--display);font-size:14px;min-height:38px}
+.mobile-nav__social .social-pending{color:#67757a;padding:8px 0}
+.mobile-nav__social .social-icon,.mobile-nav__social .facebook-icon{width:22px;height:22px;flex:none}
+.mobile-nav__social .youtube-icon{width:28px;height:20px;flex:none}
+.social-pending small,.footer-social-pending small{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#899ba4}
+.footer-nav .footer-social-pending{display:flex;align-items:center;gap:10px;min-height:24px;color:#a3b1b7;font-size:13px}
+.footer-nav .footer-social-pending .facebook-icon{width:22px;height:22px;flex:0 0 22px}
+.footer-sitemap{border-top:1px solid #344650;padding:16px 0 0;margin:0 0 21px}
+.footer-sitemap a{font-family:var(--body);font-size:12px;color:#dce4e7}
+@media(max-width:760px){
+ .band{min-height:90px;gap:2px 9px;padding:18px 14px;font-size:10px;letter-spacing:.08em}
+ .band b{font-size:12px}
+ .footer-nav>div:last-child{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:15px!important;grid-column:1/-1}
+ .footer-nav>div:last-child>strong{grid-column:auto;margin:0 0 3px}
+ .footer-nav>div:last-child>a,.footer-nav>div:last-child>a:last-of-type{display:flex!important;width:auto!important;min-width:0!important;grid-column:auto!important;align-items:center!important;border:0!important;padding:0!important;margin:0!important}
+ .footer-nav .footer-social-pending{font-size:12px}
+ .footer-sitemap{margin-top:9px}
+}
