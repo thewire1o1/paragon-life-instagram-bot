@@ -748,3 +748,18 @@ body.footer-in-view .life-message-bubble{
  .life-footer-nav{gap:22px 14px}
  .life-footer-lower .life-footer-brand-links{gap:10px 13px}
 }
+
+
+/* Match Digital Paragon's responsive Instagram bubble and balance Shop heading. */
+.life-footer-shop>h3{text-align:center}
+@media(max-width:640px){
+ .life-message-bubble{
+  box-sizing:border-box;
+  width:54px;height:54px;min-width:54px;min-height:54px;
+  padding:0;gap:0;border-radius:50%;
+  right:max(14px,env(safe-area-inset-right));
+  bottom:max(14px,env(safe-area-inset-bottom));
+ }
+ .life-message-bubble svg{width:24px;height:24px}
+ .life-message-bubble span{display:none}
+}
