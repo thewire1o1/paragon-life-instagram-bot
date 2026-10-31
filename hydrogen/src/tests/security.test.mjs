@@ -37,3 +37,8 @@ test('Hydrogen retains its independent Merch shop and internal links have intern
  assert.match(landing,/Explore the builds →/);
  assert.match(landing,/Explore technology →/);
 });
+
+test('Hydrogen removes all boxed external icons and retains branded Instagram',()=>{
+ assert.doesNotMatch(root,/ExternalIcon/);
+ assert.match(root,/paragon-life-insta/);
+});

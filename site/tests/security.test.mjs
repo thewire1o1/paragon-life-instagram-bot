@@ -72,10 +72,9 @@ test('Paragon Merch is a real destination in all navigation without restoring th
  assert.match(page,/id="cart-open"/);
  assert.doesNotMatch(html,/id="shop"|PARAGON<br>GOODS\./);
 });
-test('all outbound links end with an outbound marker, including Coffee and Digital Paragon',()=>{
- const anchors=[...html.matchAll(/<a\b[^>]*href="https?:\/\/[^"]+"[^>]*>[\s\S]*?<\/a>/g)];
- assert.ok(anchors.length>=5);
- for(const [anchor] of anchors){
-  assert.match(anchor,/<svg class="external-icon"[\s\S]*?<\/svg><\/a>$/);
- }
+test('no boxed external-link marks survive; colored Instagram and YouTube marks remain',()=>{
+ const pages=[html,readFileSync(new URL('../shop/index.html',import.meta.url),'utf8'),readFileSync(new URL('../sitemap.html',import.meta.url),'utf8')];
+ pages.forEach(page=>assert.doesNotMatch(page,/class="external-icon"|↗/));
+ assert.match(html,/class="social-icon"/);
+ assert.match(css,/#FF0033/);
 });

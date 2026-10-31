@@ -10,6 +10,6 @@ export default function Shop(){
  {mode!=='live'&&<p className="launch">The Paragon Life collection is being prepared.</p>}
  {notice&&<p role="status" className="notice">{notice}</p>}
  <div className="product-grid">{products.map(p=><article key={p.handle} className="product"><div className="product-img">{p.image&&<img src={p.image} alt={p.imageAlt||p.title} loading="lazy"/>}</div><h2>{p.title}</h2><div className="variant-buttons">{p.variants.filter(v=>v.available).map(v=><button key={v.id} disabled={busy===v.id} onClick={()=>add(v)}>{v.title}: {new Intl.NumberFormat('en-US',{style:'currency',currency:v.currency}).format(v.price)} · Add</button>)}</div></article>)}</div>
- {cart&&<section className="cart" aria-label="Shopping bag"><h2>Bag ({cart.count})</h2><p>Subtotal {new Intl.NumberFormat('en-US',{style:'currency',currency:cart.currency}).format(cart.subtotal)}</p><button onClick={checkout} disabled={busy==='checkout'||!cart.count}>Checkout ↗</button></section>}
+ {cart&&<section className="cart" aria-label="Shopping bag"><h2>Bag ({cart.count})</h2><p>Subtotal {new Intl.NumberFormat('en-US',{style:'currency',currency:cart.currency}).format(cart.subtotal)}</p><button onClick={checkout} disabled={busy==='checkout'||!cart.count}>Checkout →</button></section>}
  </main>;
 }
