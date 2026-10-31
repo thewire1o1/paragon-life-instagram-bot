@@ -110,6 +110,25 @@ function renderCatalog(products){
  }
  if(shopGrid.children.length){liveProducts.hidden=false;const pending=document.getElementById('collection-pending');if(pending)pending.hidden=true}
 }
+
+function renderHomepageMerch(products){
+ const grid=document.getElementById('featured-merch-live-grid'),wrap=document.getElementById('featured-merch-live'),preview=document.getElementById('featured-merch-preview');
+ if(!grid||!wrap||!preview||!Array.isArray(products))return;
+ const available=products.filter(p=>p.available&&p.variants?.some(v=>v.available)&&/^https:\/\/cdn\.shopify\.com\//.test(p.image||'')).slice(0,4);
+ if(!available.length)return;
+ const frag=document.createDocumentFragment();
+ for(const p of available){
+  const variant=p.variants.find(v=>v.available),card=make('a',undefined,'merch-feature-card');
+  card.href='/shop/';const img=document.createElement('img');img.className='merch-live-photo';img.src=p.image;img.alt=p.imageAlt||p.title;img.loading='lazy';img.decoding='async';
+  const bottom=make('div',undefined,'merch-feature-card-caption'),detail=make('div');
+  detail.append(make('span','AVAILABLE IN SHOP'),make('strong',p.title));
+  bottom.append(detail,make('span',amount(variant.price,variant.currency),'merch-live-price'));
+  card.append(img,bottom);frag.append(card);
+ }
+ grid.replaceChildren(frag);wrap.hidden=false;preview.hidden=true;
+ const status=document.getElementById('merch-feature-status');if(status)status.textContent='Actual Paragon Life store products and prices.';
+}
+
 updateCart();
 cartOpen.addEventListener('click',()=>setCartOpen(true));
 cartClose.addEventListener('click',()=>setCartOpen(false));
@@ -123,6 +142,6 @@ checkoutButton.addEventListener('click',async()=>{
 (async()=>{
  try{
   const {products}=await requestShop('catalog');
-  if(Array.isArray(products)&&shopGrid&&liveProducts){renderCatalog(products);if(!liveProducts.hidden){cart=await requestShop('cart');updateCart()}}
+  if(Array.isArray(products)){renderHomepageMerch(products);if(shopGrid&&liveProducts){renderCatalog(products);if(!liveProducts.hidden){cart=await requestShop('cart');updateCart()}}}
  }catch{/* Keep commerce hidden until the independent Life store is configured. */}
 })();
