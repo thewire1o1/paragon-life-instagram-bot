@@ -108,7 +108,7 @@ function renderCatalog(products){
   add.addEventListener('click',()=>addItem(select.value,1,add));
   item.append(select,add);shopGrid.append(item);
  }
- if(shopGrid.children.length){liveProducts.hidden=false;const pending=document.getElementById('collection-pending');if(pending)pending.hidden=true}
+ if(shopGrid.children.length){liveProducts.hidden=false;const pending=document.getElementById('collection-pending');if(pending)pending.hidden=true;const preview=document.getElementById('shop-preview');if(preview)preview.hidden=true}
 }
 
 function renderHomepageMerch(products){
