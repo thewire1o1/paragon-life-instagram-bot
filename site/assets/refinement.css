@@ -525,3 +525,6 @@ body.menu-open .life-message-bubble,body.cart-active .life-message-bubble{displa
 .life-footer-social-links{gap:10px 15px}
 .life-footer-brand-links{gap:11px 20px}
 }
+
+/* Reserve space for the floating Instagram contact button at the end of the mobile footer. */
+@media(max-width:760px){.footer.life-footer{padding-bottom:90px}}
