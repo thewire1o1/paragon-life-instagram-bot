@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Paragon Mutual Unfollow (iPhone Safari)
 // @namespace    https://github.com/thewire1o1/paragon-life-instagram-bot
-// @version      0.3.1
+// @version      0.4.0
 // @updateURL    https://raw.githubusercontent.com/thewire1o1/paragon-life-instagram-bot/main/tools/paragon-mutual-unfollow.user.js
 // @downloadURL  https://raw.githubusercontent.com/thewire1o1/paragon-life-instagram-bot/main/tools/paragon-mutual-unfollow.user.js
 // @description  Scan Instagram directly in Safari and selectively unfollow mutuals. No export required.
@@ -32,7 +32,7 @@
   document.head.appendChild(css);
   const root = document.createElement('div');
   root.id = ROOT;
-  root.innerHTML = '<button class="fab" id="pl-toggle" type="button">Mutuals</button><section class="panel"><div class="heading">Mutual Unfollow</div><div class="muted">Keep people who have not followed you. Unfollow only people who follow you back.</div><div class="stat"><div>Followers<strong id="pl-followers">0</strong></div><div>Following<strong id="pl-following">0</strong></div><div>Mutuals<strong id="pl-mutuals">0</strong></div><div>Completed<strong id="pl-done">0</strong></div></div><div id="pl-import"><label>1. Choose your downloaded Instagram ZIP file</label><input id="pl-files" type="file" multiple/><div class="muted">Select the original ZIP from Files. No need to unzip. The iPhone picker allows all files because iOS sometimes incorrectly filters ZIP archives. For extracted files, choose followers_1.json and following.json together. Everything stays on your phone.</div></div><details><summary class="small">Alternative: Scan Instagram directly</summary><div id="pl-direct"><button id="pl-live" class="action alt" type="button">Scan Followers + Following</button><div class="muted">Only if you do not have a JSON export. Leave Safari open.</div></div></details><label for="pl-owner">Instagram username</label><input id="pl-owner" type="text" placeholder="@youraccount" autocapitalize="none" autocomplete="off" spellcheck="false"><label for="pl-keep">Never unfollow these accounts (one username per line, optional)</label><textarea id="pl-keep" rows="2" placeholder="@friend&#10;@favoritecreator"></textarea><label for="pl-batch">Actions per session</label><select id="pl-batch"><option value="10">10</option><option value="15">15</option><option value="25">25</option><option value="50">50</option></select><div class="checks"><input id="pl-confirm" type="checkbox"><label for="pl-confirm">I checked the mutuals preview and am signed into the Instagram account shown above.</label></div><button id="pl-preview" class="action alt" type="button">Preview accounts</button><button id="pl-start" class="action" type="button">Start batch</button><button id="pl-pause" class="action alt" type="button">Pause</button><div id="pl-status" class="msg"></div><details><summary class="small">Preview / history</summary><div id="pl-list" class="msg"></div></details><button id="pl-reset" type="button" class="action alt">Reset saved data</button><div class="muted">Leave Safari open. The script pauses after each batch, on errors, or if Instagram restricts actions. Instagram can change its interface and break automation. Version 0.3.1.</div></section>';
+  root.innerHTML = '<button class="fab" id="pl-toggle" type="button">Mutuals</button><section class="panel"><div class="heading">Mutual Unfollow</div><div class="muted">Keep people who have not followed you. Unfollow only people who follow you back.</div><div class="stat"><div>Followers<strong id="pl-followers">0</strong></div><div>Following<strong id="pl-following">0</strong></div><div>Mutuals<strong id="pl-mutuals">0</strong></div><div>Completed<strong id="pl-done">0</strong></div></div><div id="pl-import"><label>1. Choose ONE Instagram file</label><input id="pl-files" type="file"/><div class="muted">Best: select the prepared paragon_instagram_ready.json file. It already contains BOTH lists. You can also choose the original Instagram ZIP, or select followers_1.json and following.json separately. Files never leave your phone.</div></div><details><summary class="small">Alternative: Scan Instagram directly</summary><div id="pl-direct"><button id="pl-live" class="action alt" type="button">Scan Followers + Following</button><div class="muted">Only if you do not have a JSON export. Leave Safari open.</div></div></details><label for="pl-owner">Instagram username</label><input id="pl-owner" type="text" placeholder="@youraccount" autocapitalize="none" autocomplete="off" spellcheck="false"><label for="pl-keep">Never unfollow these accounts (one username per line, optional)</label><textarea id="pl-keep" rows="2" placeholder="@friend&#10;@favoritecreator"></textarea><label for="pl-batch">Actions per session</label><select id="pl-batch"><option value="10">10</option><option value="15">15</option><option value="25">25</option><option value="50">50</option></select><div class="checks"><input id="pl-confirm" type="checkbox"><label for="pl-confirm">I checked the mutuals preview and am signed into the Instagram account shown above.</label></div><button id="pl-preview" class="action alt" type="button">Preview accounts</button><button id="pl-start" class="action" type="button">Start batch</button><button id="pl-pause" class="action alt" type="button">Pause</button><div id="pl-status" class="msg"></div><details><summary class="small">Preview / history</summary><div id="pl-list" class="msg"></div></details><button id="pl-reset" type="button" class="action alt">Reset saved data</button><div class="muted">Leave Safari open. The script pauses after each batch, on errors, or if Instagram restricts actions. Instagram can change its interface and break automation. Version 0.4.0.</div></section>';
   document.body.appendChild(root);
   const el = id => document.getElementById(id);
   el('pl-toggle').onclick = () => root.classList.toggle('open');
@@ -286,52 +286,75 @@
     }
     return rows;
   }
+
+  // One-file prepared import, ZIP import, or two sequential JSON selections.
+  // No network traffic or third-party account authentication.
   el('pl-files').onchange = async evt => {
     const files=Array.from(evt.target.files || []);
-    if(!files.length)return;
-    const followers=[],following=[],errors=[];
-    let foundFollowers=0,foundFollowing=0,sourceAccount='';
-    for(const file of files){
-      try {
-        if(/\.zip$/i.test(file.name)){
-          const m=file.name.match(/^instagram-(.+?)-\d{4}-\d{2}-\d{2}-/i);
-          if(m && valid(m[1]))sourceAccount=normalize(m[1]);
+    if (!files.length) {status('No file chosen.');return;}
+    const file=files[0];
+    data.running=false; data.scanning=false; data.scanStage=''; data.scanStatus='';
+    data.pauseReason='Reading '+file.name+'…';
+    save();render();root.classList.add('open');
+    // Let Safari paint the progress message before file parsing.
+    await new Promise(resolve=>setTimeout(resolve,40));
+    try {
+      let parsed=[];
+      if(/\.zip$/i.test(file.name)) {
+        parsed=await instagramJsonFromZip(file);
+        if(!parsed.length)throw Error('Could not find followers_1.json and following.json inside this ZIP.');
+      } else {
+        parsed=[{name:file.name,obj:JSON.parse(await file.text())}];
+      }
+      let nextFollowers=[],nextFollowing=[],account='',hasFollower=false,hasFollowing=false;
+      const zipAccount=file.name.match(/^instagram-(.+?)-\d{4}-\d{2}-\d{2}-/i);
+      if(zipAccount && valid(zipAccount[1]))account=normalize(zipAccount[1]);
+      for(const {name,obj} of parsed) {
+        const lower=name.toLowerCase();
+        if(obj && obj.format==='paragon-mutual-import-v1') {
+          if(!Array.isArray(obj.followers) || !Array.isArray(obj.following))throw Error('Prepared file is missing one of the two lists.');
+          nextFollowers=unique(obj.followers);
+          nextFollowing=unique(obj.following);
+          hasFollower=hasFollowing=true;
+          if(valid(obj.account))account=normalize(obj.account);
+        } else if(/^followers(?:_\d+)?\.json$/.test(lower) || Array.isArray(obj)) {
+          const list=extract(Array.isArray(obj)?obj:obj.relationships_followers||[]);
+          if(list.length){nextFollowers.push(...list);hasFollower=true;}
+        } else if(/^(following|following_accounts)\.json$/.test(lower) || obj && Array.isArray(obj.relationships_following)) {
+          const list=extract(obj.relationships_following||[]);
+          if(list.length){nextFollowing.push(...list);hasFollowing=true;}
         }
-        const records=/\.zip$/i.test(file.name)
-          ? await instagramJsonFromZip(file)
-          : [{name:file.name,obj:JSON.parse(await file.text())}];
-        for(const {name,obj} of records){
-          const lower=name.toLowerCase();
-          if(/^followers(?:_\d+)?\.json$/.test(lower)){
-            const rows=extract(Array.isArray(obj)?obj:(obj.relationships_followers||[]));
-            if(rows.length){followers.push(...rows);foundFollowers++;}
-          }else if(/^(following|following_accounts)\.json$/.test(lower)){
-            const rows=extract(obj.relationships_following||[]);
-            if(rows.length){following.push(...rows);foundFollowing++;}
-          }
-        }
-      } catch(err){errors.push(file.name+': '+err.message);}
+      }
+      if(!hasFollower && !hasFollowing)throw Error('This file does not contain a recognized followers or following list.');
+      if(hasFollower && !hasFollowing && data.importStage!=='following') {
+        // Starting a new two-file import; discard old following data.
+        data.followers=[];data.following=[];
+      }
+      if(hasFollowing && !hasFollower && data.importStage!=='followers') {
+        // Starting a new two-file import; discard old followers data.
+        data.followers=[];data.following=[];
+      }
+      if(hasFollower)data.followers=unique(nextFollowers);
+      if(hasFollowing)data.following=unique(nextFollowing);
+      data.done=[];data.skipped=[];data.queue=[];data.inBatch=0;
+      data.importStage = hasFollower && hasFollowing ? '' : (hasFollower ? 'followers' : 'following');
+      data.exportAt=hasFollower&&hasFollowing ? new Date().toISOString() : '';
+      if(account){data.owner=account;el('pl-owner').value=account;}
+      el('pl-confirm').checked=false;
+      if(!data.followers.length || !data.following.length) {
+        data.pauseReason='Loaded '+file.name+' successfully ('+(hasFollower?data.followers.length+' followers':data.following.length+' following')+'). Now choose '+(hasFollower?'following.json':'followers_1.json')+' using the SAME file picker.';
+      } else {
+        data.importStage='';
+        data.pauseReason='IMPORT SUCCESS: '+data.followers.length+' followers, '+data.following.length+' following, '+common().length+' mutuals. Check account and preview.';
+      }
+      save();render();preview();
+    } catch(err) {
+      data.pauseReason='IMPORT ERROR: '+err.message;
+      save();render();
+    } finally {
+      evt.target.value='';
+      root.classList.add('open');
     }
-    if(errors.length){status('File could not be fully verified. '+errors.join('; '));return;}
-    if(!foundFollowers||!foundFollowing){
-      status('Missing followers or following data. Select the original Instagram ZIP or both JSON files.');return;
-    }
-    data.running=false;
-    data.scanning=false;
-    data.scanStatus='';
-    data.scanStage='';
-    data.followers=unique(followers);
-    data.following=unique(following);
-    data.done=[];
-    data.skipped=[];
-    data.queue=[];
-    data.inBatch=0;
-    data.exportAt=new Date().toISOString();
-    if(sourceAccount){data.owner=sourceAccount;el('pl-owner').value=sourceAccount;}
-    data.pauseReason='Verified import: '+data.followers.length+' followers, '+data.following.length+
-      ' following, '+common().length+' mutuals. Check the preview and account before starting.';
-    el('pl-confirm').checked=false;
-    save();render();preview();root.classList.add('open');
   };
 
   el('pl-start').onclick = () => {
