@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Paragon Mutual Unfollow (iPhone Safari)
 // @namespace    https://github.com/thewire1o1/paragon-life-instagram-bot
-// @version      0.7.1
+// @version      0.8.0
 // @updateURL    https://raw.githubusercontent.com/thewire1o1/paragon-life-instagram-bot/main/tools/paragon-mutual-unfollow.user.js
 // @downloadURL  https://raw.githubusercontent.com/thewire1o1/paragon-life-instagram-bot/main/tools/paragon-mutual-unfollow.user.js
 // @description  Scan Instagram directly in Safari and selectively unfollow mutuals. No export required.
@@ -56,34 +56,47 @@
     return readLedger(data.owner).events.filter(e=>e.kind==='unfollow'&&new Date(e.at).toDateString()===now).length;
   }
 
-  if(data.scriptVersion!=='0.7.1') {
+  if(data.scriptVersion!=='0.8.0') {
     data.running=false;
     data.scanning=false;
-    data.scriptVersion='0.7.1';
+    data.scriptVersion='0.8.0';
     data.batch=0;
     if(!data.progressOwner)data.progressOwner=normalize(data.owner);
     data.delay=3; // Replace the old 18-second cooldown even for returning users.
     data.logs=Array.isArray(data.logs)?data.logs:[];
-    data.pauseReason='Updated to 0.7.1. Stored progress preserved. All remaining is selected.';
+    data.pauseReason='Updated to 0.8.0. Safari navigation recovery improved; stored progress preserved.';
     save();
   }
-  // Manual refresh/back must not restart an unfinished batch. A single
-  // explicitly scheduled next-profile navigation may continue automatically.
-  const NEXT_PAGE_KEY='paragon_mutuals_intended_navigation_v1';
-  function intendedNavigation() {
+  // The old single-use sessionStorage ticket caused intermittent false stops
+  // after Safari loaded an expected target profile. Continue only a recent
+  // active run on the exact saved target; never resume arbitrary old sessions.
+  const RUN_RESUME_MS=120000;
+  function currentProfileUsername(){
     try {
-      const ticket=JSON.parse(sessionStorage.getItem(NEXT_PAGE_KEY)||'null');
-      sessionStorage.removeItem(NEXT_PAGE_KEY);
-      return ticket && ticket.destination===location.pathname &&
-        Date.now()-ticket.time<30000 && ticket.owner===data.owner;
-    } catch (_) {return false;}
+      const parts=location.pathname.split('/').filter(Boolean);
+      return parts.length===1 ? normalize(decodeURIComponent(parts[0])) : '';
+    }catch(_){return '';}
   }
-  if(data.running && !intendedNavigation()){
-    data.running=false;
-    data.pauseReason='Stopped after page refresh. Progress saved. Tap Start batch to resume.';
-    save();
+  function resumeAssessment(state, profile, now){
+    const age=now-Number(state.lastRunActivityAt||0);
+    const target=normalize(state.lastTarget||'');
+    if(!state.running)return {ok:false,reason:'Run is not active',age};
+    if(!valid(target))return {ok:false,reason:'No saved target',age};
+    if(profile!==target)return {ok:false,reason:'Page differs from saved target',age};
+    if(age<0||age>RUN_RESUME_MS)return {ok:false,reason:'Run checkpoint expired',age};
+    return {ok:true,reason:'Expected profile resumed',age};
   }
-  if(!data.running){try{sessionStorage.removeItem(NEXT_PAGE_KEY);}catch(_){}}
+  if(data.running){
+    const assessment=resumeAssessment(data,currentProfileUsername(),Date.now());
+    if(!assessment.ok){
+      data.running=false;
+      data.pauseReason='Stopped: '+assessment.reason+'. Progress saved. Tap Start to continue.';
+      save();
+    } else {
+      data.pauseReason='Continuing active run at @'+data.lastTarget+'.';
+      save();
+    }
+  }
   let openedInstagramMenu=false;
   const common = () => { const followerSet = new Set(data.followers); return data.following.filter(name => followerSet.has(name)); };
   const candidates = () => unique(common()).filter(name => !data.excludes.includes(name) && !data.done.includes(name) && !data.skipped.includes(name));
@@ -95,7 +108,7 @@
   document.head.appendChild(css);
   const root = document.createElement('div');
   root.id = ROOT;
-  root.innerHTML = '<button class="fab" id="pl-toggle" type="button">Mutuals</button><section class="panel"><div class="heading">Mutual Unfollow <button id="pl-close" type="button" style="float:right;background:#3a332b;color:white;border:0;border-radius:7px;padding:2px 9px">Close</button></div><div class="muted">Keep people who have not followed you. Unfollow only people who follow you back.</div><div class="stat"><div>Followers<strong id="pl-followers">0</strong></div><div>Following<strong id="pl-following">0</strong></div><div>Mutuals<strong id="pl-mutuals">0</strong></div><div>Unfollowed<strong id="pl-done">0</strong></div><div>Already done / skipped<strong id="pl-skipped">0</strong></div><div>Remaining<strong id="pl-remaining">0</strong></div><div>Today (recorded)<strong id="pl-today">0</strong></div></div><div id="pl-import"><label>1. Choose ONE Instagram file</label><input id="pl-files" type="file"/><div class="muted">Best: select the prepared paragon_instagram_ready.json file. It already contains BOTH lists. You can also choose the original Instagram ZIP, or select followers_1.json and following.json separately. Files never leave your phone.</div></div><details><summary class="small">Alternative: Scan Instagram directly</summary><div id="pl-direct"><button id="pl-live" class="action alt" type="button">Scan Followers + Following</button><div class="muted">Only if you do not have a JSON export. Leave Safari open.</div></div></details><label for="pl-owner">Instagram username</label><input id="pl-owner" type="text" placeholder="@youraccount" autocapitalize="none" autocomplete="off" spellcheck="false"><label for="pl-keep">Never unfollow these accounts (one username per line, optional)</label><textarea id="pl-keep" rows="2" placeholder="@friend&#10;@favoritecreator"></textarea><label for="pl-batch">Run length</label><select id="pl-batch"><option value="0">All remaining (until stopped)</option><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option><option value="200">200</option></select><div class="checks"><input id="pl-confirm" type="checkbox"><label for="pl-confirm">I checked the mutuals preview and am signed into the Instagram account shown above.</label></div><button id="pl-preview" class="action alt" type="button">Preview accounts</button><button id="pl-start" class="action" type="button">Start batch</button><button id="pl-pause" class="action alt" type="button">Pause</button><button id="pl-skip" class="action alt" type="button">Skip stuck account</button><div id="pl-status" class="msg"></div><button id="pl-debug" class="action alt" type="button">Copy diagnostic log</button><button id="pl-update" class="action alt" type="button">Open update in Safari</button><div id="pl-debug-last" class="muted"></div><details><summary class="small">Preview / history</summary><div id="pl-list" class="msg"></div></details><button id="pl-reset" type="button" class="action alt">Reset saved data</button><div class="muted">All remaining has no arbitrary 50-action cutoff. Stops on detected Instagram restrictions or errors. Keep Safari open. Progress is saved by Instagram account, even after new JSON imports. Version 0.7.1.</div></section>';
+  root.innerHTML = '<button class="fab" id="pl-toggle" type="button">Mutuals</button><section class="panel"><div class="heading">Mutual Unfollow <button id="pl-close" type="button" style="float:right;background:#3a332b;color:white;border:0;border-radius:7px;padding:2px 9px">Close</button></div><div class="muted">Keep people who have not followed you. Unfollow only people who follow you back.</div><div class="stat"><div>Followers<strong id="pl-followers">0</strong></div><div>Following<strong id="pl-following">0</strong></div><div>Mutuals<strong id="pl-mutuals">0</strong></div><div>Unfollowed<strong id="pl-done">0</strong></div><div>Already done / skipped<strong id="pl-skipped">0</strong></div><div>Remaining<strong id="pl-remaining">0</strong></div><div>Today (recorded)<strong id="pl-today">0</strong></div></div><div id="pl-import"><label>1. Choose ONE Instagram file</label><input id="pl-files" type="file"/><div class="muted">Best: select the prepared paragon_instagram_ready.json file. It already contains BOTH lists. You can also choose the original Instagram ZIP, or select followers_1.json and following.json separately. Files never leave your phone.</div></div><details><summary class="small">Alternative: Scan Instagram directly</summary><div id="pl-direct"><button id="pl-live" class="action alt" type="button">Scan Followers + Following</button><div class="muted">Only if you do not have a JSON export. Leave Safari open.</div></div></details><label for="pl-owner">Instagram username</label><input id="pl-owner" type="text" placeholder="@youraccount" autocapitalize="none" autocomplete="off" spellcheck="false"><label for="pl-keep">Never unfollow these accounts (one username per line, optional)</label><textarea id="pl-keep" rows="2" placeholder="@friend&#10;@favoritecreator"></textarea><label for="pl-batch">Run length</label><select id="pl-batch"><option value="0">All remaining (until stopped)</option><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option><option value="200">200</option></select><div class="checks"><input id="pl-confirm" type="checkbox"><label for="pl-confirm">I checked the mutuals preview and am signed into the Instagram account shown above.</label></div><button id="pl-preview" class="action alt" type="button">Preview accounts</button><button id="pl-start" class="action" type="button">Start batch</button><button id="pl-pause" class="action alt" type="button">Pause</button><button id="pl-skip" class="action alt" type="button">Skip stuck account</button><div id="pl-status" class="msg"></div><button id="pl-debug" class="action alt" type="button">Copy diagnostic log</button><button id="pl-update" class="action alt" type="button">Open update in Safari</button><div id="pl-debug-last" class="muted"></div><details><summary class="small">Preview / history</summary><div id="pl-list" class="msg"></div></details><button id="pl-reset" type="button" class="action alt">Reset saved data</button><div class="muted">All remaining has no arbitrary 50-action cutoff. Stops on detected Instagram restrictions or errors. Keep Safari open. Progress is saved by Instagram account, even after new JSON imports. Version 0.8.0.</div></section>';
   document.body.appendChild(root);
   const el = id => document.getElementById(id);
   el('pl-toggle').onclick = () => root.classList.toggle('open');
@@ -106,6 +119,7 @@
     el('pl-list').textContent = set.length ? set.slice(0,160).map((n,i) => (i+1) + '. @' + n).join('\n') + (set.length>160 ? '\n…' : '') : 'No eligible mutuals loaded.';
   };
   function trace(stage, username) {
+    if(data.running)data.lastRunActivityAt=Date.now();
     const item={time:new Date().toISOString(),stage:stage,target:username || data.lastTarget || ''};
     data.lastStage=stage;
     data.lastTarget=item.target;
@@ -158,12 +172,16 @@
     const header=profileHeader();
     const all=(ctx)=>buttons(ctx).map(e=>labelOf(e)).filter(Boolean).slice(0,25);
     const diagnostics={
-      script:'0.7.1',
+      script:'0.8.0',
       urlPath:location.pathname,
       run:data.running ? 'running':'stopped',
       target:data.lastTarget,
       stage:data.lastStage,
       message:data.pauseReason,
+      navigation:{lastRunActivityAt:data.lastRunActivityAt||null,
+        secondsSinceCheckpoint:data.lastRunActivityAt?Math.round((Date.now()-data.lastRunActivityAt)/1000):null,
+        currentProfile:currentProfileUsername(),expectedProfile:data.lastTarget||null,
+        currentHost:location.host},
       completed:data.done.length,
       skipped:data.skipped.length,
       popupNames:[...document.querySelectorAll('[role="dialog"],[role="menu"],[aria-modal="true"]')].filter(isVisible).map(x=>all(x)).slice(0,5),
@@ -490,6 +508,7 @@
     data.queue = candidates();
     if (!data.queue.length) { status('No eligible mutuals left.'); return; }
     data.running = true;
+    data.lastRunActivityAt=Date.now();
     data.checkedInBatch=0;
     openedInstagramMenu=false;
     root.classList.remove('open');
@@ -507,7 +526,6 @@
     // Running is false before reload so a manual refresh cannot restart it.
     if(openedInstagramMenu){
       openedInstagramMenu=false;
-      try{sessionStorage.removeItem(NEXT_PAGE_KEY);}catch(_){}
       location.replace(location.href);
     }
   }
@@ -574,10 +592,10 @@
       trace('Navigating to profile',username);
       data.pauseReason='Opening @'+username;
       save();render();
-      try{sessionStorage.setItem(NEXT_PAGE_KEY,JSON.stringify({
-        destination:'/'+username+'/',owner:data.owner,time:Date.now()
-      }));}catch(_){return halted('Safari navigation storage unavailable. Stopped.');}
-      location.assign('https://www.instagram.com/'+encodeURIComponent(username)+'/');
+      // Navigate on the same origin so Safari retains this account's local storage.
+      data.lastRunActivityAt=Date.now();
+      save();
+      location.assign(location.origin+'/'+encodeURIComponent(username)+'/');
       return;
     }
     processProfile(username).catch(err=>halted('Unexpected error for @'+username+': '+err.message));
