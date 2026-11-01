@@ -20,7 +20,7 @@
   const normalize = v => String(v || '').replace(/^@/, '').trim().toLowerCase();
   const valid = v => /^[a-z0-9._]{1,30}$/.test(normalize(v));
   const unique = list => [...new Set(list.map(normalize).filter(valid))];
-  const common = () => data.following.filter(name => new Set(data.followers).has(name));
+  const common = () => { const followerSet = new Set(data.followers); return data.following.filter(name => followerSet.has(name)); };
   const candidates = () => unique(common()).filter(name => !data.excludes.includes(name) && !data.done.includes(name) && !data.skipped.includes(name));
   const text = value => document.createTextNode(value);
   const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -133,7 +133,7 @@
     }
     return null;
   }
-  function profileHeader() { return document.querySelector('main header') || document.querySelector('header'); }
+  function profileHeader() { return document.querySelector('main header'); }
   function atUsername(name) { return normalize(decodeURIComponent(location.pathname).split('/').filter(Boolean)[0]) === name; }
   function next() {
     if (!data.running) return;
@@ -171,6 +171,8 @@
     const success = await awaitButton(() => profileHeader(), 'follow', 9500) || await awaitButton(() => profileHeader(), 'follow back', 3000);
     if (!data.running) return;
     if (!success || isBlocked()) return halted('Could not verify unfollow succeeded for @' + username + '. Stopped for review.');
+    await sleep(1800);
+    if (!(buttonNamed(profileHeader(), 'follow') || buttonNamed(profileHeader(), 'follow back')) || isBlocked()) return halted('Unfollow for @' + username + ' did not remain confirmed. Stopped for review.');
     data.done.push(username);
     data.inBatch++;
     data.pauseReason = 'Verified unfollow @' + username + ' (' + data.inBatch + '/' + data.batch + ' in batch).';
