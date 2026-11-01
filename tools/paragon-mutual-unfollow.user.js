@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Paragon Mutual Unfollow (iPhone Safari)
 // @namespace    https://github.com/thewire1o1/paragon-life-instagram-bot
-// @version      0.7.0
+// @version      0.7.1
 // @updateURL    https://raw.githubusercontent.com/thewire1o1/paragon-life-instagram-bot/main/tools/paragon-mutual-unfollow.user.js
 // @downloadURL  https://raw.githubusercontent.com/thewire1o1/paragon-life-instagram-bot/main/tools/paragon-mutual-unfollow.user.js
 // @description  Scan Instagram directly in Safari and selectively unfollow mutuals. No export required.
@@ -56,15 +56,15 @@
     return readLedger(data.owner).events.filter(e=>e.kind==='unfollow'&&new Date(e.at).toDateString()===now).length;
   }
 
-  if(data.scriptVersion!=='0.7.0') {
+  if(data.scriptVersion!=='0.7.1') {
     data.running=false;
     data.scanning=false;
-    data.scriptVersion='0.7.0';
+    data.scriptVersion='0.7.1';
     data.batch=0;
     if(!data.progressOwner)data.progressOwner=normalize(data.owner);
     data.delay=3; // Replace the old 18-second cooldown even for returning users.
     data.logs=Array.isArray(data.logs)?data.logs:[];
-    data.pauseReason='Updated to 0.7.0. Stored progress preserved. All remaining is selected.';
+    data.pauseReason='Updated to 0.7.1. Stored progress preserved. All remaining is selected.';
     save();
   }
   // Manual refresh/back must not restart an unfinished batch. A single
@@ -95,7 +95,7 @@
   document.head.appendChild(css);
   const root = document.createElement('div');
   root.id = ROOT;
-  root.innerHTML = '<button class="fab" id="pl-toggle" type="button">Mutuals</button><section class="panel"><div class="heading">Mutual Unfollow <button id="pl-close" type="button" style="float:right;background:#3a332b;color:white;border:0;border-radius:7px;padding:2px 9px">Close</button></div><div class="muted">Keep people who have not followed you. Unfollow only people who follow you back.</div><div class="stat"><div>Followers<strong id="pl-followers">0</strong></div><div>Following<strong id="pl-following">0</strong></div><div>Mutuals<strong id="pl-mutuals">0</strong></div><div>Unfollowed<strong id="pl-done">0</strong></div><div>Already done / skipped<strong id="pl-skipped">0</strong></div><div>Remaining<strong id="pl-remaining">0</strong></div><div>Today (recorded)<strong id="pl-today">0</strong></div></div><div id="pl-import"><label>1. Choose ONE Instagram file</label><input id="pl-files" type="file"/><div class="muted">Best: select the prepared paragon_instagram_ready.json file. It already contains BOTH lists. You can also choose the original Instagram ZIP, or select followers_1.json and following.json separately. Files never leave your phone.</div></div><details><summary class="small">Alternative: Scan Instagram directly</summary><div id="pl-direct"><button id="pl-live" class="action alt" type="button">Scan Followers + Following</button><div class="muted">Only if you do not have a JSON export. Leave Safari open.</div></div></details><label for="pl-owner">Instagram username</label><input id="pl-owner" type="text" placeholder="@youraccount" autocapitalize="none" autocomplete="off" spellcheck="false"><label for="pl-keep">Never unfollow these accounts (one username per line, optional)</label><textarea id="pl-keep" rows="2" placeholder="@friend&#10;@favoritecreator"></textarea><label for="pl-batch">Run length</label><select id="pl-batch"><option value="0">All remaining (until stopped)</option><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option><option value="200">200</option></select><div class="checks"><input id="pl-confirm" type="checkbox"><label for="pl-confirm">I checked the mutuals preview and am signed into the Instagram account shown above.</label></div><button id="pl-preview" class="action alt" type="button">Preview accounts</button><button id="pl-start" class="action" type="button">Start batch</button><button id="pl-pause" class="action alt" type="button">Pause</button><button id="pl-skip" class="action alt" type="button">Skip stuck account</button><div id="pl-status" class="msg"></div><button id="pl-debug" class="action alt" type="button">Copy diagnostic log</button><div id="pl-debug-last" class="muted"></div><details><summary class="small">Preview / history</summary><div id="pl-list" class="msg"></div></details><button id="pl-reset" type="button" class="action alt">Reset saved data</button><div class="muted">All remaining has no arbitrary 50-action cutoff. Stops on detected Instagram restrictions or errors. Keep Safari open. Progress is saved by Instagram account, even after new JSON imports. Version 0.7.0.</div></section>';
+  root.innerHTML = '<button class="fab" id="pl-toggle" type="button">Mutuals</button><section class="panel"><div class="heading">Mutual Unfollow <button id="pl-close" type="button" style="float:right;background:#3a332b;color:white;border:0;border-radius:7px;padding:2px 9px">Close</button></div><div class="muted">Keep people who have not followed you. Unfollow only people who follow you back.</div><div class="stat"><div>Followers<strong id="pl-followers">0</strong></div><div>Following<strong id="pl-following">0</strong></div><div>Mutuals<strong id="pl-mutuals">0</strong></div><div>Unfollowed<strong id="pl-done">0</strong></div><div>Already done / skipped<strong id="pl-skipped">0</strong></div><div>Remaining<strong id="pl-remaining">0</strong></div><div>Today (recorded)<strong id="pl-today">0</strong></div></div><div id="pl-import"><label>1. Choose ONE Instagram file</label><input id="pl-files" type="file"/><div class="muted">Best: select the prepared paragon_instagram_ready.json file. It already contains BOTH lists. You can also choose the original Instagram ZIP, or select followers_1.json and following.json separately. Files never leave your phone.</div></div><details><summary class="small">Alternative: Scan Instagram directly</summary><div id="pl-direct"><button id="pl-live" class="action alt" type="button">Scan Followers + Following</button><div class="muted">Only if you do not have a JSON export. Leave Safari open.</div></div></details><label for="pl-owner">Instagram username</label><input id="pl-owner" type="text" placeholder="@youraccount" autocapitalize="none" autocomplete="off" spellcheck="false"><label for="pl-keep">Never unfollow these accounts (one username per line, optional)</label><textarea id="pl-keep" rows="2" placeholder="@friend&#10;@favoritecreator"></textarea><label for="pl-batch">Run length</label><select id="pl-batch"><option value="0">All remaining (until stopped)</option><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option><option value="200">200</option></select><div class="checks"><input id="pl-confirm" type="checkbox"><label for="pl-confirm">I checked the mutuals preview and am signed into the Instagram account shown above.</label></div><button id="pl-preview" class="action alt" type="button">Preview accounts</button><button id="pl-start" class="action" type="button">Start batch</button><button id="pl-pause" class="action alt" type="button">Pause</button><button id="pl-skip" class="action alt" type="button">Skip stuck account</button><div id="pl-status" class="msg"></div><button id="pl-debug" class="action alt" type="button">Copy diagnostic log</button><button id="pl-update" class="action alt" type="button">Open update in Safari</button><div id="pl-debug-last" class="muted"></div><details><summary class="small">Preview / history</summary><div id="pl-list" class="msg"></div></details><button id="pl-reset" type="button" class="action alt">Reset saved data</button><div class="muted">All remaining has no arbitrary 50-action cutoff. Stops on detected Instagram restrictions or errors. Keep Safari open. Progress is saved by Instagram account, even after new JSON imports. Version 0.7.1.</div></section>';
   document.body.appendChild(root);
   const el = id => document.getElementById(id);
   el('pl-toggle').onclick = () => root.classList.toggle('open');
@@ -143,6 +143,7 @@
   el('pl-owner').value = data.owner;
   el('pl-keep').value = (data.excludes || []).join('\n');
   el('pl-batch').value = String(data.batch ?? 0);
+  el('pl-update').onclick = () => {window.open('https://raw.githubusercontent.com/thewire1o1/paragon-life-instagram-bot/main/tools/paragon-mutual-unfollow.user.js','_blank','noopener');};
   el('pl-pause').onclick = () => { data.running = false; trace('User paused'); status('Paused by you.'); };
   el('pl-skip').onclick = () => {
     data.running=false;
@@ -157,7 +158,7 @@
     const header=profileHeader();
     const all=(ctx)=>buttons(ctx).map(e=>labelOf(e)).filter(Boolean).slice(0,25);
     const diagnostics={
-      script:'0.7.0',
+      script:'0.7.1',
       urlPath:location.pathname,
       run:data.running ? 'running':'stopped',
       target:data.lastTarget,
