@@ -164,7 +164,7 @@
       return halted('Could not verify Following button for @' + username + '. No action taken. Instagram layout may have changed.');
     }
     following.click();
-    let un = await awaitButton(() => document.querySelector('[role="dialog"]') || document, 'unfollow', 6500);
+    let un = await awaitButton(() => document.querySelector('[role="dialog"]'), 'unfollow', 6500);
     if (!data.running) return;
     if (un) un.click();
     else if (!(buttonNamed(profileHeader(), 'follow') || buttonNamed(profileHeader(), 'follow back'))) return halted('Unfollow confirmation not found for @' + username + '. Stopped to prevent a wrong action.');
