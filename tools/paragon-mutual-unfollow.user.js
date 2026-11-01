@@ -1,7 +1,9 @@
 // ==UserScript==
 // @name         Paragon Mutual Unfollow (iPhone Safari)
 // @namespace    https://github.com/thewire1o1/paragon-life-instagram-bot
-// @version      0.2.0
+// @version      0.2.1
+// @updateURL    https://raw.githubusercontent.com/thewire1o1/paragon-life-instagram-bot/main/tools/paragon-mutual-unfollow.user.js
+// @downloadURL  https://raw.githubusercontent.com/thewire1o1/paragon-life-instagram-bot/main/tools/paragon-mutual-unfollow.user.js
 // @description  Scan Instagram directly in Safari and selectively unfollow mutuals. No export required.
 // @match        https://www.instagram.com/*
 // @match        https://instagram.com/*
@@ -30,7 +32,7 @@
   document.head.appendChild(css);
   const root = document.createElement('div');
   root.id = ROOT;
-  root.innerHTML = '<button class="fab" id="pl-toggle" type="button">Mutuals</button><section class="panel"><div class="heading">Mutual Unfollow</div><div class="muted">Keep people who have not followed you. Unfollow only people who follow you back.</div><div class="stat"><div>Followers<strong id="pl-followers">0</strong></div><div>Following<strong id="pl-following">0</strong></div><div>Mutuals<strong id="pl-mutuals">0</strong></div><div>Completed<strong id="pl-done">0</strong></div></div><div id="pl-direct"><label>1. Enter username, then scan Instagram directly. No export needed.</label><button id="pl-live" class="action" type="button">Scan Followers + Following</button><div class="muted">Reads both scrolling lists directly in Safari. Leave this tab open until the scan finishes.</div></div><details><summary class="small">Optional: Import Instagram JSON files instead</summary><div id="pl-import"><label>Choose JSON files: followers_1.json (and additional parts), following.json</label><input id="pl-files" type="file" accept=".json,application/json" multiple/><div class="muted">Download from Instagram: Accounts Center → Your information and permissions → Download your information → Followers and following → All time → JSON. Unzip in Files, then choose the JSON files. Nothing is uploaded.</div></div></details><label for="pl-owner">Instagram username</label><input id="pl-owner" type="text" placeholder="@youraccount" autocapitalize="none" autocomplete="off" spellcheck="false"><label for="pl-keep">Never unfollow these accounts (one username per line, optional)</label><textarea id="pl-keep" rows="2" placeholder="@friend&#10;@favoritecreator"></textarea><label for="pl-batch">Actions per session</label><select id="pl-batch"><option value="10">10</option><option value="15">15</option><option value="25">25</option><option value="50">50</option></select><div class="checks"><input id="pl-confirm" type="checkbox"><label for="pl-confirm">I checked the preview and I am signed into the same Instagram account that was scanned.</label></div><button id="pl-preview" class="action alt" type="button">Preview accounts</button><button id="pl-start" class="action" type="button">Start batch</button><button id="pl-pause" class="action alt" type="button">Pause</button><div id="pl-status" class="msg"></div><details><summary class="small">Preview / history</summary><div id="pl-list" class="msg"></div></details><button id="pl-reset" type="button" class="action alt">Reset saved data</button><div class="muted">Leave Safari open. The script pauses after each batch, on errors, or if Instagram restricts actions. Instagram can change its interface and break automation. Version 0.2.0.</div></section>';
+  root.innerHTML = '<button class="fab" id="pl-toggle" type="button">Mutuals</button><section class="panel"><div class="heading">Mutual Unfollow</div><div class="muted">Keep people who have not followed you. Unfollow only people who follow you back.</div><div class="stat"><div>Followers<strong id="pl-followers">0</strong></div><div>Following<strong id="pl-following">0</strong></div><div>Mutuals<strong id="pl-mutuals">0</strong></div><div>Completed<strong id="pl-done">0</strong></div></div><div id="pl-direct"><label>1. Enter username, then scan Instagram directly. No export needed.</label><button id="pl-live" class="action" type="button">Scan Followers + Following</button><div class="muted">Reads both scrolling lists directly in Safari. Leave this tab open until the scan finishes.</div></div><details><summary class="small">Optional: Import Instagram JSON files instead</summary><div id="pl-import"><label>Choose JSON files: followers_1.json (and additional parts), following.json</label><input id="pl-files" type="file" accept=".json,application/json" multiple/><div class="muted">Download from Instagram: Accounts Center → Your information and permissions → Download your information → Followers and following → All time → JSON. Unzip in Files, then choose the JSON files. Nothing is uploaded.</div></div></details><label for="pl-owner">Instagram username</label><input id="pl-owner" type="text" placeholder="@youraccount" autocapitalize="none" autocomplete="off" spellcheck="false"><label for="pl-keep">Never unfollow these accounts (one username per line, optional)</label><textarea id="pl-keep" rows="2" placeholder="@friend&#10;@favoritecreator"></textarea><label for="pl-batch">Actions per session</label><select id="pl-batch"><option value="10">10</option><option value="15">15</option><option value="25">25</option><option value="50">50</option></select><div class="checks"><input id="pl-confirm" type="checkbox"><label for="pl-confirm">I checked the preview and I am signed into the same Instagram account that was scanned.</label></div><button id="pl-preview" class="action alt" type="button">Preview accounts</button><button id="pl-start" class="action" type="button">Start batch</button><button id="pl-pause" class="action alt" type="button">Pause</button><div id="pl-status" class="msg"></div><details><summary class="small">Preview / history</summary><div id="pl-list" class="msg"></div></details><button id="pl-reset" type="button" class="action alt">Reset saved data</button><div class="muted">Leave Safari open. The script pauses after each batch, on errors, or if Instagram restricts actions. Instagram can change its interface and break automation. Version 0.2.1.</div></section>';
   document.body.appendChild(root);
   const el = id => document.getElementById(id);
   el('pl-toggle').onclick = () => root.classList.toggle('open');
@@ -84,17 +86,26 @@
       const headers = [...dialog.querySelectorAll('h1,h2,h3,[role="heading"]')].map(node => node.textContent.trim().toLowerCase());
       // A dialog with a recognizable opposite list heading is never scanned.
       if (headers.includes(kind === 'followers' ? 'following' : 'followers')) return null;
+      if (headers.length && !headers.some(h => h.includes(kind)) &&
+          location.pathname.toLowerCase().indexOf('/' + normalize(data.owner) + '/' + kind)===-1) return null;
       return dialog;
     }
     const pathname = location.pathname.toLowerCase().replace(/\/+$/, '');
     const owner = normalize(data.owner);
-    if (pathname === '/' + owner + '/' + kind) return document.querySelector('main');
+    if (pathname === '/' + owner + '/' + kind) {
+      const main = document.querySelector('main');
+      if (!main) return null;
+      const headings=[...main.querySelectorAll('h1,h2,h3,[role="heading"]')].map(x => x.textContent.toLowerCase());
+      const userLinks=[...main.querySelectorAll('a[href]')].filter(a => profileNameFromLink(a.getAttribute('href'))).length;
+      if (headings.some(x => x.includes(kind)) || userLinks >= 4) return main;
+    }
     return null;
   }
   function scrollTarget(pane) {
     const all = [pane, ...pane.querySelectorAll('div,section,ul')];
     const candidates = all.filter(node => {
       if (!node || node.clientHeight < 100) return false;
+      if (!node.querySelector('a[href]')) return false;
       const css = getComputedStyle(node);
       return node.scrollHeight > node.clientHeight + 20 && /auto|scroll/.test(css.overflowY);
     });
