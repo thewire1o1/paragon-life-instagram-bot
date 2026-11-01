@@ -118,7 +118,7 @@
     return /try again later|we restrict certain activity|we limit how often|please wait a few minutes|action blocked|temporarily blocked/.test(body);
   }
   function buttons(ctx) {
-    return Array.from((ctx || document).querySelectorAll('button,[role="button"]')).filter(e => !root.contains(e));
+    return ctx ? Array.from(ctx.querySelectorAll('button,[role="button"]')).filter(e => !root.contains(e)) : [];
   }
   const labelOf = e => (e.innerText || e.textContent || e.getAttribute('aria-label') || '').trim().replace(/\s+/g,' ').toLowerCase();
   function buttonNamed(ctx, exact) { return buttons(ctx).find(e => labelOf(e) === exact); }
