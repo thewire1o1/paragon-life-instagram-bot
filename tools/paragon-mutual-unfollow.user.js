@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Paragon Mutual Unfollow (iPhone Safari)
 // @namespace    https://github.com/thewire1o1/paragon-life-instagram-bot
-// @version      0.6.1
+// @version      0.7.0
 // @updateURL    https://raw.githubusercontent.com/thewire1o1/paragon-life-instagram-bot/main/tools/paragon-mutual-unfollow.user.js
 // @downloadURL  https://raw.githubusercontent.com/thewire1o1/paragon-life-instagram-bot/main/tools/paragon-mutual-unfollow.user.js
 // @description  Scan Instagram directly in Safari and selectively unfollow mutuals. No export required.
@@ -17,15 +17,54 @@
   const ROOT = 'pl-mutual-tool';
   if (window.top !== window || document.getElementById(ROOT)) return;
   const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (_) { return {}; } };
-  let data = Object.assign({ followers: [], following: [], queue: [], done: [], skipped: [], running: false, batch: 15, inBatch: 0, delay: 3, pauseReason: '', exportAt: '', owner: '', excludes: [], scanning: false, scanStage: '', scanStarted: 0, scanStatus: '' }, load());
-  const save = () => localStorage.setItem(KEY, JSON.stringify(data));
-  if(data.scriptVersion!=='0.6.1') {
+  let data = Object.assign({ followers: [], following: [], queue: [], done: [], skipped: [], running: false, batch: 0, inBatch: 0, delay: 3, pauseReason: '', exportAt: '', owner: '', excludes: [], scanning: false, scanStage: '', scanStarted: 0, scanStatus: '' }, load());
+  const normalize = v => String(v || '').replace(/^@/, '').trim().toLowerCase();
+  const valid = v => /^[a-z0-9._]{1,30}$/.test(normalize(v));
+  const unique = list => [...new Set(list.map(normalize).filter(valid))];
+  const LEDGER_PREFIX='paragon_mutual_progress_v2_';
+  function ledgerKey(owner){return LEDGER_PREFIX+normalize(owner);}
+  function readLedger(owner){
+    try {
+      const x=JSON.parse(localStorage.getItem(ledgerKey(owner))||'{}');
+      return {done:unique(x.done||[]),skipped:unique(x.skipped||[]),events:Array.isArray(x.events)?x.events:[]};
+    } catch(_){return {done:[],skipped:[],events:[]};}
+  }
+  function save(){
+    const owner=normalize(data.owner);
+    if(valid(owner)){
+      const ledger=readLedger(owner);
+      if(data.progressOwner && data.progressOwner!==owner){
+        data.done=ledger.done;data.skipped=ledger.skipped;
+      }
+      data.progressOwner=owner;
+      // Progress accumulates even when a JSON import replaces the lists.
+      data.done=unique([...ledger.done,...(data.done||[])]);
+      data.skipped=unique([...ledger.skipped,...(data.skipped||[])]);
+      localStorage.setItem(ledgerKey(owner),JSON.stringify({owner,done:data.done,skipped:data.skipped,events:ledger.events}));
+    }
+    localStorage.setItem(KEY,JSON.stringify(data));
+  }
+  function noteUnfollow(name){
+    if(!valid(data.owner))return;
+    const ledger=readLedger(data.owner);
+    if(!ledger.events.some(e=>e.username===name&&e.kind==='unfollow'))
+      ledger.events.push({username:name,kind:'unfollow',at:new Date().toISOString()});
+    localStorage.setItem(ledgerKey(data.owner),JSON.stringify(ledger));
+  }
+  function todayCount(){
+    const now=new Date().toDateString();
+    return readLedger(data.owner).events.filter(e=>e.kind==='unfollow'&&new Date(e.at).toDateString()===now).length;
+  }
+
+  if(data.scriptVersion!=='0.7.0') {
     data.running=false;
     data.scanning=false;
-    data.scriptVersion='0.6.1';
+    data.scriptVersion='0.7.0';
+    data.batch=0;
+    if(!data.progressOwner)data.progressOwner=normalize(data.owner);
     data.delay=3; // Replace the old 18-second cooldown even for returning users.
     data.logs=Array.isArray(data.logs)?data.logs:[];
-    data.pauseReason='Updated to 0.6.1. Fast 3–5 second profile transitions enabled; progress preserved.';
+    data.pauseReason='Updated to 0.7.0. Stored progress preserved. All remaining is selected.';
     save();
   }
   // Manual refresh/back must not restart an unfinished batch. A single
@@ -46,9 +85,6 @@
   }
   if(!data.running){try{sessionStorage.removeItem(NEXT_PAGE_KEY);}catch(_){}}
   let openedInstagramMenu=false;
-  const normalize = v => String(v || '').replace(/^@/, '').trim().toLowerCase();
-  const valid = v => /^[a-z0-9._]{1,30}$/.test(normalize(v));
-  const unique = list => [...new Set(list.map(normalize).filter(valid))];
   const common = () => { const followerSet = new Set(data.followers); return data.following.filter(name => followerSet.has(name)); };
   const candidates = () => unique(common()).filter(name => !data.excludes.includes(name) && !data.done.includes(name) && !data.skipped.includes(name));
   const text = value => document.createTextNode(value);
@@ -59,7 +95,7 @@
   document.head.appendChild(css);
   const root = document.createElement('div');
   root.id = ROOT;
-  root.innerHTML = '<button class="fab" id="pl-toggle" type="button">Mutuals</button><section class="panel"><div class="heading">Mutual Unfollow <button id="pl-close" type="button" style="float:right;background:#3a332b;color:white;border:0;border-radius:7px;padding:2px 9px">Close</button></div><div class="muted">Keep people who have not followed you. Unfollow only people who follow you back.</div><div class="stat"><div>Followers<strong id="pl-followers">0</strong></div><div>Following<strong id="pl-following">0</strong></div><div>Mutuals<strong id="pl-mutuals">0</strong></div><div>Completed<strong id="pl-done">0</strong></div></div><div id="pl-import"><label>1. Choose ONE Instagram file</label><input id="pl-files" type="file"/><div class="muted">Best: select the prepared paragon_instagram_ready.json file. It already contains BOTH lists. You can also choose the original Instagram ZIP, or select followers_1.json and following.json separately. Files never leave your phone.</div></div><details><summary class="small">Alternative: Scan Instagram directly</summary><div id="pl-direct"><button id="pl-live" class="action alt" type="button">Scan Followers + Following</button><div class="muted">Only if you do not have a JSON export. Leave Safari open.</div></div></details><label for="pl-owner">Instagram username</label><input id="pl-owner" type="text" placeholder="@youraccount" autocapitalize="none" autocomplete="off" spellcheck="false"><label for="pl-keep">Never unfollow these accounts (one username per line, optional)</label><textarea id="pl-keep" rows="2" placeholder="@friend&#10;@favoritecreator"></textarea><label for="pl-batch">Actions per session</label><select id="pl-batch"><option value="10">10</option><option value="15">15</option><option value="25">25</option><option value="50">50</option></select><div class="checks"><input id="pl-confirm" type="checkbox"><label for="pl-confirm">I checked the mutuals preview and am signed into the Instagram account shown above.</label></div><button id="pl-preview" class="action alt" type="button">Preview accounts</button><button id="pl-start" class="action" type="button">Start batch</button><button id="pl-pause" class="action alt" type="button">Pause</button><button id="pl-skip" class="action alt" type="button">Skip stuck account</button><div id="pl-status" class="msg"></div><button id="pl-debug" class="action alt" type="button">Copy diagnostic log</button><div id="pl-debug-last" class="muted"></div><details><summary class="small">Preview / history</summary><div id="pl-list" class="msg"></div></details><button id="pl-reset" type="button" class="action alt">Reset saved data</button><div class="muted">Leave Safari open. The script pauses after each batch, on errors, or if Instagram restricts actions. Instagram can change its interface and break automation. Version 0.6.1.</div></section>';
+  root.innerHTML = '<button class="fab" id="pl-toggle" type="button">Mutuals</button><section class="panel"><div class="heading">Mutual Unfollow <button id="pl-close" type="button" style="float:right;background:#3a332b;color:white;border:0;border-radius:7px;padding:2px 9px">Close</button></div><div class="muted">Keep people who have not followed you. Unfollow only people who follow you back.</div><div class="stat"><div>Followers<strong id="pl-followers">0</strong></div><div>Following<strong id="pl-following">0</strong></div><div>Mutuals<strong id="pl-mutuals">0</strong></div><div>Unfollowed<strong id="pl-done">0</strong></div><div>Already done / skipped<strong id="pl-skipped">0</strong></div><div>Remaining<strong id="pl-remaining">0</strong></div><div>Today (recorded)<strong id="pl-today">0</strong></div></div><div id="pl-import"><label>1. Choose ONE Instagram file</label><input id="pl-files" type="file"/><div class="muted">Best: select the prepared paragon_instagram_ready.json file. It already contains BOTH lists. You can also choose the original Instagram ZIP, or select followers_1.json and following.json separately. Files never leave your phone.</div></div><details><summary class="small">Alternative: Scan Instagram directly</summary><div id="pl-direct"><button id="pl-live" class="action alt" type="button">Scan Followers + Following</button><div class="muted">Only if you do not have a JSON export. Leave Safari open.</div></div></details><label for="pl-owner">Instagram username</label><input id="pl-owner" type="text" placeholder="@youraccount" autocapitalize="none" autocomplete="off" spellcheck="false"><label for="pl-keep">Never unfollow these accounts (one username per line, optional)</label><textarea id="pl-keep" rows="2" placeholder="@friend&#10;@favoritecreator"></textarea><label for="pl-batch">Run length</label><select id="pl-batch"><option value="0">All remaining (until stopped)</option><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option><option value="200">200</option></select><div class="checks"><input id="pl-confirm" type="checkbox"><label for="pl-confirm">I checked the mutuals preview and am signed into the Instagram account shown above.</label></div><button id="pl-preview" class="action alt" type="button">Preview accounts</button><button id="pl-start" class="action" type="button">Start batch</button><button id="pl-pause" class="action alt" type="button">Pause</button><button id="pl-skip" class="action alt" type="button">Skip stuck account</button><div id="pl-status" class="msg"></div><button id="pl-debug" class="action alt" type="button">Copy diagnostic log</button><div id="pl-debug-last" class="muted"></div><details><summary class="small">Preview / history</summary><div id="pl-list" class="msg"></div></details><button id="pl-reset" type="button" class="action alt">Reset saved data</button><div class="muted">All remaining has no arbitrary 50-action cutoff. Stops on detected Instagram restrictions or errors. Keep Safari open. Progress is saved by Instagram account, even after new JSON imports. Version 0.7.0.</div></section>';
   document.body.appendChild(root);
   const el = id => document.getElementById(id);
   el('pl-toggle').onclick = () => root.classList.toggle('open');
@@ -85,19 +121,28 @@
     el('pl-following').textContent = data.following.length.toLocaleString();
     el('pl-mutuals').textContent = common().length.toLocaleString();
     el('pl-done').textContent = data.done.length.toLocaleString();
-    el('pl-status').textContent = (data.scanning ? 'SCANNING. ' : data.running ? 'RUNNING. ' : 'READY. ') + (data.scanStatus || data.pauseReason || 'Ready.') + '\nEligible mutuals: ' + candidates().length + '. Remaining in batch: ' + Math.max(0,data.batch-data.inBatch) + '.';
+    el('pl-skipped').textContent = data.skipped.length.toLocaleString();
+    el('pl-remaining').textContent = candidates().length.toLocaleString();
+    el('pl-today').textContent = todayCount().toLocaleString();
+    el('pl-status').textContent = (data.scanning ? 'SCANNING. ' : data.running ? 'RUNNING. ' : 'READY. ') + (data.scanStatus || data.pauseReason || 'Ready.') + '\nEligible mutuals: ' + candidates().length + '. Mode: ' + (data.batch===0?'All remaining':data.batch+' per run') + '. Completed this run: '+data.inBatch+'.';
     el('pl-debug-last').textContent = 'Last step: '+(data.lastStage || 'not started')+(data.lastTarget ? ' (@'+data.lastTarget+')' : '');
   };
   el('pl-preview').onclick = () => { saveOptions(); preview(); render(); root.classList.add('open'); };
   function saveOptions() {
-    data.owner = normalize(el('pl-owner').value);
-    data.excludes = unique(el('pl-keep').value.split(/[\s,]+/));
-    data.batch = Number(el('pl-batch').value) || 15;
+    const owner=normalize(el('pl-owner').value);
+    if(data.owner && owner!==normalize(data.owner)){
+      data.followers=[];data.following=[];data.exportAt='';
+      el('pl-confirm').checked=false;
+    }
+    data.owner=owner;
+    data.excludes=unique(el('pl-keep').value.split(/[\s,]+/));
+    const selected=Number(el('pl-batch').value);
+    data.batch=[0,10,25,50,100,200].includes(selected)?selected:0;
     save();
   }
   el('pl-owner').value = data.owner;
   el('pl-keep').value = (data.excludes || []).join('\n');
-  el('pl-batch').value = String(data.batch || 15);
+  el('pl-batch').value = String(data.batch ?? 0);
   el('pl-pause').onclick = () => { data.running = false; trace('User paused'); status('Paused by you.'); };
   el('pl-skip').onclick = () => {
     data.running=false;
@@ -112,7 +157,7 @@
     const header=profileHeader();
     const all=(ctx)=>buttons(ctx).map(e=>labelOf(e)).filter(Boolean).slice(0,25);
     const diagnostics={
-      script:'0.6.1',
+      script:'0.7.0',
       urlPath:location.pathname,
       run:data.running ? 'running':'stopped',
       target:data.lastTarget,
@@ -137,8 +182,13 @@
     }
   };
   el('pl-reset').onclick = () => {
-    if (!window.confirm('Erase all scanned/imported lists, progress, and exclusions?')) return;
-    localStorage.removeItem(KEY); data = Object.assign(data,{followers:[],following:[],queue:[],done:[],skipped:[],running:false,inBatch:0,pauseReason:'Reset.',owner:'',excludes:[],scanning:false,scanStage:'',scanStarted:0,scanStatus:''}); el('pl-owner').value=''; el('pl-keep').value=''; el('pl-files').value=''; el('pl-confirm').checked=false; preview(); render();
+    if(!window.confirm('Erase imported lists AND all completed/skipped progress for @'+data.owner+'?'))return;
+    if(valid(data.owner))localStorage.removeItem(ledgerKey(data.owner));
+    localStorage.removeItem(KEY);
+    data=Object.assign(data,{followers:[],following:[],queue:[],done:[],skipped:[],running:false,inBatch:0,
+      pauseReason:'Reset.',owner:'',progressOwner:'',excludes:[],scanning:false,scanStage:'',scanStarted:0,scanStatus:''});
+    el('pl-owner').value='';el('pl-keep').value='';el('pl-files').value='';
+    el('pl-confirm').checked=false;preview();render();
   };
 
   // Scan Instagram's own visible followers and following lists, without a Meta export.
@@ -264,8 +314,6 @@
       const captured=await scanOne(kind);
       if (!captured.length) throw Error('The ' + kind + ' list was empty. Stopped.');
       data[kind]=unique(captured);
-      data.done=[];
-      data.skipped=[];
       data.queue=[];
       el('pl-confirm').checked=false;
       if (kind==='followers') {
@@ -307,8 +355,6 @@
     data.scanStatus='Opening ' + data.owner + ' followers…';
     data.followers=[];
     data.following=[];
-    data.done=[];
-    data.skipped=[];
     data.queue=[];
     save();render();runScan();
   };
@@ -411,7 +457,7 @@
       }
       if(hasFollower)data.followers=unique(nextFollowers);
       if(hasFollowing)data.following=unique(nextFollowing);
-      data.done=[];data.skipped=[];data.queue=[];data.inBatch=0;
+      data.queue=[];data.inBatch=0;
       data.importStage = hasFollower && hasFollowing ? '' : (hasFollower ? 'followers' : 'following');
       data.exportAt=hasFollower&&hasFollowing ? new Date().toISOString() : '';
       if(account){data.owner=account;el('pl-owner').value=account;}
@@ -446,7 +492,7 @@
     data.checkedInBatch=0;
     openedInstagramMenu=false;
     root.classList.remove('open');
-    data.pauseReason='Starting a batch of up to '+data.batch+'.';
+    data.pauseReason=data.batch===0?'Running all remaining until stopped.':'Starting a batch of up to '+data.batch+'.';
     trace('Batch started');
     save(); render(); step();
   };
@@ -518,7 +564,7 @@
   }
   function next() {
     if(!data.running)return;
-    if(data.inBatch>=data.batch){halted('Batch complete. Tap Start batch for another.');return;}
+    if(data.batch>0 && data.inBatch>=data.batch){halted('Selected run complete. Tap Start to continue.');return;}
     const pending=candidates();
     if(!pending.length){halted('All eligible mutuals processed.');return;}
     const username=pending[0];
@@ -575,14 +621,15 @@
     data.done=unique([...(data.done||[]),username]);
     data.inBatch++;
     data.checkedInBatch=(data.checkedInBatch||0)+1;
+    noteUnfollow(username);
     trace('Verified unfollow completed',username);
     data.pauseReason='Verified unfollow @'+username+' ('+data.inBatch+'/'+data.batch+' in batch).';
     save();render();scheduleNext(false);
   }
   function scheduleNext(skipped) {
     if(!data.running)return;
-    if(data.inBatch>=data.batch){halted('Batch complete. Tap Start batch for another.');return;}
-    if((data.checkedInBatch||0)>=Math.max(data.batch*5,30)){
+    if(data.batch>0 && data.inBatch>=data.batch){halted('Selected run complete. Tap Start to continue.');return;}
+    if(data.batch>0 && (data.checkedInBatch||0)>=Math.max(data.batch*5,30)){
       halted('Checked '+data.checkedInBatch+' profiles in this batch. Tap Start batch to continue.');
       return;
     }
