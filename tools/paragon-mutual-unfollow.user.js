@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Paragon Mutual Unfollow (iPhone Safari)
 // @namespace    https://github.com/thewire1o1/paragon-life-instagram-bot
-// @version      0.4.0
+// @version      0.5.0
 // @updateURL    https://raw.githubusercontent.com/thewire1o1/paragon-life-instagram-bot/main/tools/paragon-mutual-unfollow.user.js
 // @downloadURL  https://raw.githubusercontent.com/thewire1o1/paragon-life-instagram-bot/main/tools/paragon-mutual-unfollow.user.js
 // @description  Scan Instagram directly in Safari and selectively unfollow mutuals. No export required.
@@ -19,6 +19,14 @@
   const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (_) { return {}; } };
   let data = Object.assign({ followers: [], following: [], queue: [], done: [], skipped: [], running: false, batch: 15, inBatch: 0, delay: 18, pauseReason: '', exportAt: '', owner: '', excludes: [], scanning: false, scanStage: '', scanStarted: 0, scanStatus: '' }, load());
   const save = () => localStorage.setItem(KEY, JSON.stringify(data));
+  if(data.scriptVersion!=='0.5.0') {
+    data.running=false;
+    data.scanning=false;
+    data.scriptVersion='0.5.0';
+    data.logs=Array.isArray(data.logs)?data.logs:[];
+    data.pauseReason='Updated to 0.5.0. Review your progress, then tap Start batch to continue.';
+    save();
+  }
   const normalize = v => String(v || '').replace(/^@/, '').trim().toLowerCase();
   const valid = v => /^[a-z0-9._]{1,30}$/.test(normalize(v));
   const unique = list => [...new Set(list.map(normalize).filter(valid))];
@@ -32,7 +40,7 @@
   document.head.appendChild(css);
   const root = document.createElement('div');
   root.id = ROOT;
-  root.innerHTML = '<button class="fab" id="pl-toggle" type="button">Mutuals</button><section class="panel"><div class="heading">Mutual Unfollow</div><div class="muted">Keep people who have not followed you. Unfollow only people who follow you back.</div><div class="stat"><div>Followers<strong id="pl-followers">0</strong></div><div>Following<strong id="pl-following">0</strong></div><div>Mutuals<strong id="pl-mutuals">0</strong></div><div>Completed<strong id="pl-done">0</strong></div></div><div id="pl-import"><label>1. Choose ONE Instagram file</label><input id="pl-files" type="file"/><div class="muted">Best: select the prepared paragon_instagram_ready.json file. It already contains BOTH lists. You can also choose the original Instagram ZIP, or select followers_1.json and following.json separately. Files never leave your phone.</div></div><details><summary class="small">Alternative: Scan Instagram directly</summary><div id="pl-direct"><button id="pl-live" class="action alt" type="button">Scan Followers + Following</button><div class="muted">Only if you do not have a JSON export. Leave Safari open.</div></div></details><label for="pl-owner">Instagram username</label><input id="pl-owner" type="text" placeholder="@youraccount" autocapitalize="none" autocomplete="off" spellcheck="false"><label for="pl-keep">Never unfollow these accounts (one username per line, optional)</label><textarea id="pl-keep" rows="2" placeholder="@friend&#10;@favoritecreator"></textarea><label for="pl-batch">Actions per session</label><select id="pl-batch"><option value="10">10</option><option value="15">15</option><option value="25">25</option><option value="50">50</option></select><div class="checks"><input id="pl-confirm" type="checkbox"><label for="pl-confirm">I checked the mutuals preview and am signed into the Instagram account shown above.</label></div><button id="pl-preview" class="action alt" type="button">Preview accounts</button><button id="pl-start" class="action" type="button">Start batch</button><button id="pl-pause" class="action alt" type="button">Pause</button><div id="pl-status" class="msg"></div><details><summary class="small">Preview / history</summary><div id="pl-list" class="msg"></div></details><button id="pl-reset" type="button" class="action alt">Reset saved data</button><div class="muted">Leave Safari open. The script pauses after each batch, on errors, or if Instagram restricts actions. Instagram can change its interface and break automation. Version 0.4.0.</div></section>';
+  root.innerHTML = '<button class="fab" id="pl-toggle" type="button">Mutuals</button><section class="panel"><div class="heading">Mutual Unfollow</div><div class="muted">Keep people who have not followed you. Unfollow only people who follow you back.</div><div class="stat"><div>Followers<strong id="pl-followers">0</strong></div><div>Following<strong id="pl-following">0</strong></div><div>Mutuals<strong id="pl-mutuals">0</strong></div><div>Completed<strong id="pl-done">0</strong></div></div><div id="pl-import"><label>1. Choose ONE Instagram file</label><input id="pl-files" type="file"/><div class="muted">Best: select the prepared paragon_instagram_ready.json file. It already contains BOTH lists. You can also choose the original Instagram ZIP, or select followers_1.json and following.json separately. Files never leave your phone.</div></div><details><summary class="small">Alternative: Scan Instagram directly</summary><div id="pl-direct"><button id="pl-live" class="action alt" type="button">Scan Followers + Following</button><div class="muted">Only if you do not have a JSON export. Leave Safari open.</div></div></details><label for="pl-owner">Instagram username</label><input id="pl-owner" type="text" placeholder="@youraccount" autocapitalize="none" autocomplete="off" spellcheck="false"><label for="pl-keep">Never unfollow these accounts (one username per line, optional)</label><textarea id="pl-keep" rows="2" placeholder="@friend&#10;@favoritecreator"></textarea><label for="pl-batch">Actions per session</label><select id="pl-batch"><option value="10">10</option><option value="15">15</option><option value="25">25</option><option value="50">50</option></select><div class="checks"><input id="pl-confirm" type="checkbox"><label for="pl-confirm">I checked the mutuals preview and am signed into the Instagram account shown above.</label></div><button id="pl-preview" class="action alt" type="button">Preview accounts</button><button id="pl-start" class="action" type="button">Start batch</button><button id="pl-pause" class="action alt" type="button">Pause</button><button id="pl-skip" class="action alt" type="button">Skip stuck account</button><div id="pl-status" class="msg"></div><button id="pl-debug" class="action alt" type="button">Copy diagnostic log</button><div id="pl-debug-last" class="muted"></div><details><summary class="small">Preview / history</summary><div id="pl-list" class="msg"></div></details><button id="pl-reset" type="button" class="action alt">Reset saved data</button><div class="muted">Leave Safari open. The script pauses after each batch, on errors, or if Instagram restricts actions. Instagram can change its interface and break automation. Version 0.5.0.</div></section>';
   document.body.appendChild(root);
   const el = id => document.getElementById(id);
   el('pl-toggle').onclick = () => root.classList.toggle('open');
@@ -41,14 +49,24 @@
     const set = candidates();
     el('pl-list').textContent = set.length ? set.slice(0,160).map((n,i) => (i+1) + '. @' + n).join('\n') + (set.length>160 ? '\n…' : '') : 'No eligible mutuals loaded.';
   };
+  function trace(stage, username) {
+    const item={time:new Date().toISOString(),stage:stage,target:username || data.lastTarget || ''};
+    data.lastStage=stage;
+    data.lastTarget=item.target;
+    data.logs=(Array.isArray(data.logs)?data.logs:[]).concat(item).slice(-60);
+    save();
+    const debug=el('pl-debug-last');
+    if(debug)debug.textContent='Last step: '+stage+(item.target?' (@'+item.target+')':'');
+  }
   const render = () => {
     el('pl-live').disabled = Boolean(data.scanning);
-    el('pl-toggle').textContent = data.scanning ? 'Scanning…' : 'Mutuals';
+    el('pl-toggle').textContent = data.scanning ? 'Scanning…' : data.running ? 'Mutuals (Running)' : /^(STOPPED|Stopped|Could not|Instagram restriction|Unfollow|Error|No confirmation)/i.test(data.pauseReason || '') ? 'Mutuals (Stopped)' : 'Mutuals';
     el('pl-followers').textContent = data.followers.length.toLocaleString();
     el('pl-following').textContent = data.following.length.toLocaleString();
     el('pl-mutuals').textContent = common().length.toLocaleString();
     el('pl-done').textContent = data.done.length.toLocaleString();
     el('pl-status').textContent = (data.scanning ? 'SCANNING. ' : data.running ? 'RUNNING. ' : 'READY. ') + (data.scanStatus || data.pauseReason || 'Ready.') + '\nEligible mutuals: ' + candidates().length + '. Remaining in batch: ' + Math.max(0,data.batch-data.inBatch) + '.';
+    el('pl-debug-last').textContent = 'Last step: '+(data.lastStage || 'not started')+(data.lastTarget ? ' (@'+data.lastTarget+')' : '');
   };
   el('pl-preview').onclick = () => { saveOptions(); preview(); render(); root.classList.add('open'); };
   function saveOptions() {
@@ -60,7 +78,44 @@
   el('pl-owner').value = data.owner;
   el('pl-keep').value = (data.excludes || []).join('\n');
   el('pl-batch').value = String(data.batch || 15);
-  el('pl-pause').onclick = () => { data.running = false; status('Paused by you.'); };
+  el('pl-pause').onclick = () => { data.running = false; trace('User paused'); status('Paused by you.'); };
+  el('pl-skip').onclick = () => {
+    data.running=false;
+    const name=data.lastTarget;
+    if(!name || !candidates().includes(name)){status('No stuck target to skip.');return;}
+    if(!window.confirm('Skip @'+name+' and leave the account followed?')) return;
+    data.skipped=unique([...(data.skipped||[]),name]);
+    trace('Skipped stuck target',name);
+    status('Skipped @'+name+'. You can start another batch. This account remains followed.');
+  };
+  el('pl-debug').onclick = async () => {
+    const header=profileHeader();
+    const all=(ctx)=>buttons(ctx).map(e=>labelOf(e)).filter(Boolean).slice(0,25);
+    const diagnostics={
+      script:'0.5.0',
+      urlPath:location.pathname,
+      run:data.running ? 'running':'stopped',
+      target:data.lastTarget,
+      stage:data.lastStage,
+      message:data.pauseReason,
+      completed:data.done.length,
+      skipped:data.skipped.length,
+      popupNames:[...document.querySelectorAll('[role="dialog"],[role="menu"],[aria-modal="true"]')].filter(isVisible).map(x=>all(x)).slice(0,5),
+      profileButtons:all(header),
+      visibleUnfollowButtons:buttons(document).filter(x=>labelOf(x)==='unfollow' && isVisible(x)).length,
+      log:(data.logs||[]).slice(-30)
+    };
+    const report=JSON.stringify(diagnostics,null,2);
+    try {
+      await navigator.clipboard.writeText(report);
+      status('Diagnostic copied to clipboard. Paste it into this ChatGPT conversation.');
+    }catch(_){
+      const input=document.createElement('textarea');
+      input.value=report;input.style.cssText='position:fixed;top:15%;left:5%;width:90%;height:60vh;z-index:2147483647;background:#fff;color:#000';
+      document.body.appendChild(input);input.focus();input.select();
+      status('Select and copy the diagnostic text box, then paste it into ChatGPT.');
+    }
+  };
   el('pl-reset').onclick = () => {
     if (!window.confirm('Erase all scanned/imported lists, progress, and exclusions?')) return;
     localStorage.removeItem(KEY); data = Object.assign(data,{followers:[],following:[],queue:[],done:[],skipped:[],running:false,inBatch:0,pauseReason:'Reset.',owner:'',excludes:[],scanning:false,scanStage:'',scanStarted:0,scanStatus:''}); el('pl-owner').value=''; el('pl-keep').value=''; el('pl-files').value=''; el('pl-confirm').checked=false; preview(); render();
@@ -357,6 +412,7 @@
     }
   };
 
+
   el('pl-start').onclick = () => {
     saveOptions();
     if (!data.followers.length || !data.following.length) { status('Import the Instagram ZIP or scan the lists first.'); return; }
@@ -366,74 +422,125 @@
     data.inBatch = 0;
     data.queue = candidates();
     if (!data.queue.length) { status('No eligible mutuals left.'); return; }
-    data.running = true; data.pauseReason = 'Starting batch of up to ' + data.batch + '.';
+    data.running = true;
+    data.pauseReason='Starting a batch of up to '+data.batch+'.';
+    trace('Batch started');
     save(); render(); step();
   };
-  function halted(message) { data.running=false; status(message); root.classList.add('open'); }
+  function halted(message) {
+    data.running=false;
+    data.pauseReason='STOPPED: '+message;
+    trace('Stopped: '+message);
+    save();render();
+    // Never force the panel to open over Instagram. User can tap Mutuals.
+  }
   function isBlocked() {
     const body = (document.body.innerText || '').slice(-8000).toLowerCase();
     return /try again later|we restrict certain activity|we limit how often|please wait a few minutes|action blocked|temporarily blocked/.test(body);
   }
+  function isVisible(node) {
+    if (!node || !node.isConnected) return false;
+    const rect=node.getBoundingClientRect();
+    if (rect.width < 1 || rect.height < 1) return false;
+    const style=getComputedStyle(node);
+    return style.display!=='none' && style.visibility!=='hidden' && style.opacity!=='0';
+  }
   function buttons(ctx) {
-    return ctx ? Array.from(ctx.querySelectorAll('button,[role="button"]')).filter(e => !root.contains(e)) : [];
+    return ctx ? Array.from(ctx.querySelectorAll('button,[role="button"]')).filter(e => !root.contains(e) && isVisible(e)) : [];
   }
   const labelOf = e => (e.innerText || e.textContent || e.getAttribute('aria-label') || '').trim().replace(/\s+/g,' ').toLowerCase();
-  function buttonNamed(ctx, exact) { return buttons(ctx).find(e => labelOf(e) === exact); }
-  async function awaitButton(ctx, name, timeout) {
-    const end = Date.now() + timeout;
-    while (Date.now() < end) {
-      if (!data.running) return null;
-      const b = buttonNamed(typeof ctx === 'function' ? ctx() : ctx, name);
-      if (b) return b;
-      if (isBlocked()) return null;
-      await sleep(400);
+  function buttonNamed(ctx, exact) {return buttons(ctx).find(e=>labelOf(e)===exact);}
+  function profileHeader() {return document.querySelector('main header') || document.querySelector('main');}
+  function profileAction(exact) {
+    const main=document.querySelector('main');
+    if(!main)return null;
+    const header=main.querySelector('header');
+    if(header)return buttonNamed(header,exact);
+    const matches=buttons(main).filter(e=>labelOf(e)===exact);
+    return matches.length===1 ? matches[0]:null;
+  }
+  async function waitFor(predicate, timeout) {
+    const deadline=Date.now()+timeout;
+    while(Date.now()<deadline) {
+      if(!data.running)return null;
+      if(isBlocked())return null;
+      const hit=predicate();
+      if(hit)return hit;
+      await sleep(350);
     }
     return null;
   }
-  function profileHeader() { return document.querySelector('main header'); }
-  function atUsername(name) { return normalize(decodeURIComponent(location.pathname).split('/').filter(Boolean)[0]) === name; }
+  function atUsername(name) {
+    try{return normalize(decodeURIComponent(location.pathname).split('/').filter(Boolean)[0])===name;}
+    catch(_) {return false;}
+  }
+  function findUnfollowConfirmation() {
+    // Instagram's mobile sheet sometimes uses role=menu instead of role=dialog.
+    // Only click an exact, visible Unfollow control after opening Following
+    // on the correct target's profile.
+    const all=buttons(document).filter(e=>labelOf(e)==='unfollow');
+    if(all.length!==1)return null;
+    const candidate=all[0];
+    // Never click content in our own panel or a profile header.
+    const head=document.querySelector('main header');
+    if(head && head.contains(candidate))return null;
+    return candidate;
+  }
   function next() {
-    if (!data.running) return;
-    if (data.inBatch >= data.batch) { halted('Batch complete. Tap Start batch for another.'); return; }
-    const pending = candidates();
-    if (!pending.length) { halted('All eligible mutuals processed.'); return; }
-    const username = pending[0];
-    if (!atUsername(username)) {
-      data.pauseReason = 'Opening @' + username;
-      save(); render();
-      location.assign('https://www.instagram.com/' + encodeURIComponent(username) + '/');
+    if(!data.running)return;
+    if(data.inBatch>=data.batch){halted('Batch complete. Tap Start batch for another.');return;}
+    const pending=candidates();
+    if(!pending.length){halted('All eligible mutuals processed.');return;}
+    const username=pending[0];
+    data.lastTarget=username;
+    if(!atUsername(username)) {
+      trace('Navigating to profile',username);
+      data.pauseReason='Opening @'+username;
+      save();render();
+      location.assign('https://www.instagram.com/'+encodeURIComponent(username)+'/');
       return;
     }
-    processProfile(username);
+    processProfile(username).catch(err=>halted('Unexpected error for @'+username+': '+err.message));
   }
   async function processProfile(username) {
-    if (isBlocked()) return halted('Instagram restriction detected. No further actions taken.');
-    await sleep(1400);
-    let header = profileHeader();
-    let following = await awaitButton(() => profileHeader(), 'following', 12000);
-    if (!data.running) return;
-    if (!atUsername(username)) return halted('Unexpected profile navigation. Stopped.');
-    if (!following) {
-      const already = buttonNamed(header, 'follow') || buttonNamed(header, 'follow back');
-      if (already) {
-        data.skipped.push(username); data.inBatch++; data.pauseReason = '@' + username + ' was already unfollowed. Skipped.'; save(); render(); return scheduleNext();
+    if(isBlocked())return halted('Instagram restriction detected; no more actions were taken.');
+    trace('Waiting for profile actions',username);
+    await sleep(1200);
+    const following=await waitFor(()=>profileAction('following'),13000);
+    if(!data.running)return;
+    if(!atUsername(username))return halted('Profile changed unexpectedly for @'+username);
+    if(!following) {
+      const already=profileAction('follow') || profileAction('follow back');
+      if(already) {
+        data.skipped=unique([...(data.skipped||[]),username]);
+        data.inBatch++;
+        trace('Already not followed, skipped',username);
+        data.pauseReason='@'+username+' was already unfollowed; skipped.';
+        save();render();return scheduleNext();
       }
-      return halted('Could not verify Following button for @' + username + '. No action taken. Instagram layout may have changed.');
+      return halted('Following control missing for @'+username+'. Tap Copy diagnostic log and send it.');
     }
+    trace('Clicking Following on profile',username);
     following.click();
-    let un = await awaitButton(() => document.querySelector('[role="dialog"]'), 'unfollow', 6500);
-    if (!data.running) return;
-    if (un) un.click();
-    else if (!(buttonNamed(profileHeader(), 'follow') || buttonNamed(profileHeader(), 'follow back'))) return halted('Unfollow confirmation not found for @' + username + '. Stopped to prevent a wrong action.');
-    const success = await awaitButton(() => profileHeader(), 'follow', 9500) || await awaitButton(() => profileHeader(), 'follow back', 3000);
-    if (!data.running) return;
-    if (!success || isBlocked()) return halted('Could not verify unfollow succeeded for @' + username + '. Stopped for review.');
-    await sleep(1800);
-    if (!(buttonNamed(profileHeader(), 'follow') || buttonNamed(profileHeader(), 'follow back')) || isBlocked()) return halted('Unfollow for @' + username + ' did not remain confirmed. Stopped for review.');
-    data.done.push(username);
+    // Do not require role="dialog": mobile Instagram may use a different sheet.
+    const unfollow=await waitFor(findUnfollowConfirmation,11000);
+    if(!data.running)return;
+    if(!unfollow)return halted('Unfollow confirmation not found for @'+username+'. Tap Copy diagnostic log.');
+    if(!atUsername(username))return halted('Target changed before confirmation.');
+    trace('Clicking Unfollow confirmation',username);
+    unfollow.click();
+    const success=await waitFor(()=>profileAction('follow') || profileAction('follow back'),14000);
+    if(!data.running)return;
+    if(!success || isBlocked())return halted('Could not verify unfollow for @'+username+'. Check account and send diagnostic log.');
+    await sleep(1100);
+    if(!(profileAction('follow')||profileAction('follow back'))||isBlocked()) {
+      return halted('Unfollow status changed after confirmation for @'+username+'. Stopped.');
+    }
+    data.done=unique([...(data.done||[]),username]);
     data.inBatch++;
-    data.pauseReason = 'Verified unfollow @' + username + ' (' + data.inBatch + '/' + data.batch + ' in batch).';
-    save(); render(); scheduleNext();
+    trace('Verified unfollow completed',username);
+    data.pauseReason='Verified @'+username+' ('+data.inBatch+'/'+data.batch+' in batch).';
+    save();render();scheduleNext();
   }
   function scheduleNext() {
     if (!data.running) return;
