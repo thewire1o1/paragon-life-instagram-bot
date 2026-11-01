@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Paragon Mutual Unfollow (iPhone Safari)
 // @namespace    https://github.com/thewire1o1/paragon-life-instagram-bot
-// @version      0.1.0
-// @description  Selectively unfollow mutual Instagram followers using your own export. Never unfollows non-followers.
+// @version      0.2.0
+// @description  Scan Instagram directly in Safari and selectively unfollow mutuals. No export required.
 // @match        https://www.instagram.com/*
 // @match        https://instagram.com/*
 // @run-at       document-idle
@@ -15,7 +15,7 @@
   const ROOT = 'pl-mutual-tool';
   if (window.top !== window || document.getElementById(ROOT)) return;
   const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (_) { return {}; } };
-  let data = Object.assign({ followers: [], following: [], queue: [], done: [], skipped: [], running: false, batch: 15, inBatch: 0, delay: 18, pauseReason: '', exportAt: '', owner: '', excludes: [] }, load());
+  let data = Object.assign({ followers: [], following: [], queue: [], done: [], skipped: [], running: false, batch: 15, inBatch: 0, delay: 18, pauseReason: '', exportAt: '', owner: '', excludes: [], scanning: false, scanStage: '', scanStarted: 0, scanStatus: '' }, load());
   const save = () => localStorage.setItem(KEY, JSON.stringify(data));
   const normalize = v => String(v || '').replace(/^@/, '').trim().toLowerCase();
   const valid = v => /^[a-z0-9._]{1,30}$/.test(normalize(v));
@@ -30,7 +30,7 @@
   document.head.appendChild(css);
   const root = document.createElement('div');
   root.id = ROOT;
-  root.innerHTML = '<button class="fab" id="pl-toggle" type="button">Mutuals</button><section class="panel"><div class="heading">Mutual Unfollow</div><div class="muted">Keep people who have not followed you. Unfollow only people who follow you back.</div><div class="stat"><div>Followers<strong id="pl-followers">0</strong></div><div>Following<strong id="pl-following">0</strong></div><div>Mutuals<strong id="pl-mutuals">0</strong></div><div>Completed<strong id="pl-done">0</strong></div></div><div id="pl-import"><label>1. Select Instagram JSON files: followers_1.json (and additional parts), following.json</label><input id="pl-files" type="file" accept=".json,application/json" multiple/><div class="muted">Download from Instagram: Accounts Center → Your information and permissions → Download your information → Followers and following → All time → JSON. Unzip in Files, then choose the JSON files. Nothing is uploaded.</div></div><label for="pl-owner">2. Instagram username (account that exported these files)</label><input id="pl-owner" type="text" placeholder="@youraccount" autocapitalize="none" autocomplete="off" spellcheck="false"><label for="pl-keep">3. Never unfollow these accounts (one username per line, optional)</label><textarea id="pl-keep" rows="2" placeholder="@friend&#10;@favoritecreator"></textarea><label for="pl-batch">4. Actions per session</label><select id="pl-batch"><option value="10">10</option><option value="15">15</option><option value="25">25</option><option value="50">50</option></select><div class="checks"><input id="pl-confirm" type="checkbox"><label for="pl-confirm">I checked the preview and I am signed into the same Instagram account as the export.</label></div><button id="pl-preview" class="action alt" type="button">Preview accounts</button><button id="pl-start" class="action" type="button">Start batch</button><button id="pl-pause" class="action alt" type="button">Pause</button><div id="pl-status" class="msg"></div><details><summary class="small">Preview / history</summary><div id="pl-list" class="msg"></div></details><button id="pl-reset" type="button" class="action alt">Reset saved data</button><div class="muted">Leave Safari open. The script pauses after each batch, on errors, or if Instagram restricts actions. Instagram can change its interface and break automation. Version 0.1.0.</div></section>';
+  root.innerHTML = '<button class="fab" id="pl-toggle" type="button">Mutuals</button><section class="panel"><div class="heading">Mutual Unfollow</div><div class="muted">Keep people who have not followed you. Unfollow only people who follow you back.</div><div class="stat"><div>Followers<strong id="pl-followers">0</strong></div><div>Following<strong id="pl-following">0</strong></div><div>Mutuals<strong id="pl-mutuals">0</strong></div><div>Completed<strong id="pl-done">0</strong></div></div><div id="pl-direct"><label>1. Enter username, then scan Instagram directly. No export needed.</label><button id="pl-live" class="action" type="button">Scan Followers + Following</button><div class="muted">Reads both scrolling lists directly in Safari. Leave this tab open until the scan finishes.</div></div><details><summary class="small">Optional: Import Instagram JSON files instead</summary><div id="pl-import"><label>Choose JSON files: followers_1.json (and additional parts), following.json</label><input id="pl-files" type="file" accept=".json,application/json" multiple/><div class="muted">Download from Instagram: Accounts Center → Your information and permissions → Download your information → Followers and following → All time → JSON. Unzip in Files, then choose the JSON files. Nothing is uploaded.</div></div></details><label for="pl-owner">Instagram username</label><input id="pl-owner" type="text" placeholder="@youraccount" autocapitalize="none" autocomplete="off" spellcheck="false"><label for="pl-keep">Never unfollow these accounts (one username per line, optional)</label><textarea id="pl-keep" rows="2" placeholder="@friend&#10;@favoritecreator"></textarea><label for="pl-batch">Actions per session</label><select id="pl-batch"><option value="10">10</option><option value="15">15</option><option value="25">25</option><option value="50">50</option></select><div class="checks"><input id="pl-confirm" type="checkbox"><label for="pl-confirm">I checked the preview and I am signed into the same Instagram account that was scanned.</label></div><button id="pl-preview" class="action alt" type="button">Preview accounts</button><button id="pl-start" class="action" type="button">Start batch</button><button id="pl-pause" class="action alt" type="button">Pause</button><div id="pl-status" class="msg"></div><details><summary class="small">Preview / history</summary><div id="pl-list" class="msg"></div></details><button id="pl-reset" type="button" class="action alt">Reset saved data</button><div class="muted">Leave Safari open. The script pauses after each batch, on errors, or if Instagram restricts actions. Instagram can change its interface and break automation. Version 0.2.0.</div></section>';
   document.body.appendChild(root);
   const el = id => document.getElementById(id);
   el('pl-toggle').onclick = () => root.classList.toggle('open');
@@ -40,11 +40,13 @@
     el('pl-list').textContent = set.length ? set.slice(0,160).map((n,i) => (i+1) + '. @' + n).join('\n') + (set.length>160 ? '\n…' : '') : 'No eligible mutuals loaded.';
   };
   const render = () => {
+    el('pl-live').disabled = Boolean(data.scanning);
+    el('pl-toggle').textContent = data.scanning ? 'Scanning…' : 'Mutuals';
     el('pl-followers').textContent = data.followers.length.toLocaleString();
     el('pl-following').textContent = data.following.length.toLocaleString();
     el('pl-mutuals').textContent = common().length.toLocaleString();
     el('pl-done').textContent = data.done.length.toLocaleString();
-    el('pl-status').textContent = (data.running ? 'RUNNING. ' : 'PAUSED. ') + (data.pauseReason || 'Ready.') + '\nEligible: ' + candidates().length + '. Remaining in batch: ' + Math.max(0,data.batch-data.inBatch) + '.';
+    el('pl-status').textContent = (data.scanning ? 'SCANNING. ' : data.running ? 'RUNNING. ' : 'READY. ') + (data.scanStatus || data.pauseReason || 'Ready.') + '\nEligible mutuals: ' + candidates().length + '. Remaining in batch: ' + Math.max(0,data.batch-data.inBatch) + '.';
   };
   el('pl-preview').onclick = () => { saveOptions(); preview(); render(); root.classList.add('open'); };
   function saveOptions() {
@@ -58,8 +60,171 @@
   el('pl-batch').value = String(data.batch || 15);
   el('pl-pause').onclick = () => { data.running = false; status('Paused by you.'); };
   el('pl-reset').onclick = () => {
-    if (!window.confirm('Erase all imported lists, progress, and exclusions?')) return;
-    localStorage.removeItem(KEY); data = Object.assign(data,{followers:[],following:[],queue:[],done:[],skipped:[],running:false,inBatch:0,pauseReason:'Reset.',owner:'',excludes:[]}); el('pl-owner').value=''; el('pl-keep').value=''; el('pl-files').value=''; el('pl-confirm').checked=false; preview(); render();
+    if (!window.confirm('Erase all scanned/imported lists, progress, and exclusions?')) return;
+    localStorage.removeItem(KEY); data = Object.assign(data,{followers:[],following:[],queue:[],done:[],skipped:[],running:false,inBatch:0,pauseReason:'Reset.',owner:'',excludes:[],scanning:false,scanStage:'',scanStarted:0,scanStatus:''}); el('pl-owner').value=''; el('pl-keep').value=''; el('pl-files').value=''; el('pl-confirm').checked=false; preview(); render();
+  };
+
+  // Scan Instagram's own visible followers and following lists, without a Meta export.
+  // Strictly collect profile links inside the list pane, never from the surrounding site.
+  let scanBusy = false;
+  const scanWait = async ms => new Promise(resolve => setTimeout(resolve, ms));
+  const ignoredProfilePaths = new Set(['accounts','direct','explore','reels','reel','p','stories','about','developer','privacy','legal','web','api','challenge','settings','graphql']);
+  function profileNameFromLink(href) {
+    try {
+      const u = new URL(href, location.origin);
+      if (u.hostname !== location.hostname) return '';
+      const match = u.pathname.match(/^\/([A-Za-z0-9._]{1,30})\/$/);
+      if (!match || ignoredProfilePaths.has(match[1].toLowerCase())) return '';
+      return normalize(match[1]);
+    } catch (_) { return ''; }
+  }
+  function paneFor(kind) {
+    const dialog = document.querySelector('[role="dialog"]');
+    if (dialog) {
+      const headers = [...dialog.querySelectorAll('h1,h2,h3,[role="heading"]')].map(node => node.textContent.trim().toLowerCase());
+      // A dialog with a recognizable opposite list heading is never scanned.
+      if (headers.includes(kind === 'followers' ? 'following' : 'followers')) return null;
+      return dialog;
+    }
+    const pathname = location.pathname.toLowerCase().replace(/\/+$/, '');
+    const owner = normalize(data.owner);
+    if (pathname === '/' + owner + '/' + kind) return document.querySelector('main');
+    return null;
+  }
+  function scrollTarget(pane) {
+    const all = [pane, ...pane.querySelectorAll('div,section,ul')];
+    const candidates = all.filter(node => {
+      if (!node || node.clientHeight < 100) return false;
+      const css = getComputedStyle(node);
+      return node.scrollHeight > node.clientHeight + 20 && /auto|scroll/.test(css.overflowY);
+    });
+    candidates.sort((a,b) => (a.clientHeight-b.clientHeight));
+    return candidates[0] || (pane.getAttribute('role') === 'dialog' ? pane : document.scrollingElement);
+  }
+  function collectNames(pane, found) {
+    if (!pane) return;
+    const links = pane.querySelectorAll('a[href]');
+    for (const link of links) {
+      const username = profileNameFromLink(link.getAttribute('href'));
+      if (username && username !== normalize(data.owner)) found.add(username);
+    }
+  }
+  async function findList(kind) {
+    for (let i=0; i<25; i++) {
+      const scope = paneFor(kind);
+      if (scope && scope.querySelector('a[href]')) return scope;
+      await scanWait(500);
+    }
+    return null;
+  }
+  async function scanOne(kind) {
+    const scope = await findList(kind);
+    if (!scope) throw Error('Could not open the ' + kind + ' list on this Instagram page.');
+    const scroll = scrollTarget(scope);
+    if (!scroll) throw Error('Could not identify the list scroll area.');
+    const found = new Set();
+    let stable=0,lastSize=-1;
+    const started=Date.now();
+    for (let iteration=0;iteration<450;iteration++) {
+      if (!data.scanning || data.scanStage !== kind) throw Error('Scan interrupted.');
+      if (!scope.isConnected) throw Error('Instagram closed the ' + kind + ' list during scanning.');
+      collectNames(scope,found);
+      const atBottom = scroll.scrollTop + scroll.clientHeight >= scroll.scrollHeight - 6;
+      if (found.size===lastSize && atBottom) stable++;
+      else stable=0;
+      lastSize=found.size;
+      data.scanStatus = 'Reading ' + kind + ': ' + found.size + ' accounts. ' + (atBottom ? 'Checking end of list…' : 'Scrolling…');
+      render();
+      if (found.size>0 && stable>=9) return [...found];
+      if (Date.now()-started>150000) throw Error(kind + ' scan timed out; no partial list was saved.');
+      if (scroll === document.scrollingElement) window.scrollBy(0,Math.max(480,window.innerHeight*0.85));
+      else {
+        const offset=Math.max(350,scroll.clientHeight * 0.85);
+        scroll.scrollTop=Math.min(scroll.scrollHeight,scroll.scrollTop + offset);
+        scroll.dispatchEvent(new Event('scroll',{bubbles:true}));
+      }
+      await scanWait(700);
+    }
+    throw Error('Could not confirm end of ' + kind + ' list.');
+  }
+  async function runScan() {
+    if (scanBusy || !data.scanning) return;
+    scanBusy = true;
+    try {
+      if (Date.now()-data.scanStarted > 12*60*1000) throw Error('Scan session expired; tap Scan again.');
+      const kind=data.scanStage;
+      if (kind!=='followers' && kind!=='following') throw Error('Invalid scan step.');
+      const owner=normalize(data.owner);
+      if (!valid(owner)) throw Error('Enter the Instagram username first.');
+      const expectedPath='/' + owner + '/' + kind + '/';
+      if (location.pathname.toLowerCase().replace(/\/+$/,'/') !== expectedPath) {
+        save();
+        location.assign('https://www.instagram.com' + expectedPath);
+        return;
+      }
+      data.scanStatus='Opening ' + kind + ' list…';
+      render();
+      let list = await findList(kind);
+      if (!list) {
+        const link=[...document.querySelectorAll('a[href]')].find(a => {
+          try {return new URL(a.href).pathname.toLowerCase().replace(/\/+$/,'/')===expectedPath;}catch(_){return false;}
+        });
+        if (link) {
+          link.click();
+          list = await findList(kind);
+        }
+      }
+      if (!list) throw Error('Instagram did not display the ' + kind + ' list. Take a screenshot of the current page.');
+      const captured=await scanOne(kind);
+      if (!captured.length) throw Error('The ' + kind + ' list was empty. Stopped.');
+      data[kind]=unique(captured);
+      data.done=[];
+      data.skipped=[];
+      data.queue=[];
+      el('pl-confirm').checked=false;
+      if (kind==='followers') {
+        data.scanStage='following';
+        data.scanStatus='Captured ' + data.followers.length + ' followers. Opening following…';
+        save(); render();
+        location.assign('https://www.instagram.com/' + owner + '/following/');
+        return;
+      }
+      data.scanning=false;
+      data.scanStage='';
+      data.scanStatus='Scan finished: ' + data.followers.length + ' followers, ' + data.following.length + ' following, ' + common().length + ' mutuals. Review the list and confirm before any unfollows.';
+      data.pauseReason=data.scanStatus;
+      data.exportAt=new Date().toISOString();
+      save();
+      render(); preview(); root.classList.add('open');
+    } catch (err) {
+      data.scanning=false;
+      data.scanStage='';
+      data.scanStatus='';
+      status('Scan stopped: ' + err.message + ' No unfollows performed.');
+      root.classList.add('open');
+    } finally {scanBusy=false;}
+  }
+  el('pl-live').onclick=() => {
+    saveOptions();
+    if (!valid(data.owner)) {
+      const fromPath=location.pathname.match(/^\/([A-Za-z0-9._]+)\/$/);
+      if (fromPath && valid(fromPath[1]) && !ignoredProfilePaths.has(normalize(fromPath[1]))) {
+        data.owner=normalize(fromPath[1]);
+        el('pl-owner').value=data.owner;
+      }
+    }
+    if (!valid(data.owner)) { status('Enter your Instagram username to scan.'); return; }
+    if (data.running) {data.running=false;}
+    data.scanning=true;
+    data.scanStage='followers';
+    data.scanStarted=Date.now();
+    data.scanStatus='Opening ' + data.owner + ' followers…';
+    data.followers=[];
+    data.following=[];
+    data.done=[];
+    data.skipped=[];
+    data.queue=[];
+    save();render();runScan();
   };
   function extract(entries) {
     if (!Array.isArray(entries)) return [];
@@ -102,7 +267,7 @@
   };
   el('pl-start').onclick = () => {
     saveOptions();
-    if (!data.followers.length || !data.following.length) { status('Import followers and following JSON first.'); return; }
+    if (!data.followers.length || !data.following.length) { status('Scan the Instagram lists first (or import JSON).'); return; }
     if (!valid(data.owner)) { status('Enter the account username the files belong to.'); return; }
     if (!el('pl-confirm').checked) { status('Confirm that this is the same signed-in account and you reviewed the preview.'); return; }
     if (data.running) return;
@@ -190,5 +355,6 @@
     next();
   }
   render();
-  if (data.running) setTimeout(step, 2000);
+  if (data.scanning) setTimeout(runScan, 1300);
+  else if (data.running) setTimeout(step, 2000);
 })();
